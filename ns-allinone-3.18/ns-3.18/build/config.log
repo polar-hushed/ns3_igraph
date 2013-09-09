@@ -1,6 +1,6 @@
-# project ns (3.18) configured on Mon Sep  9 13:58:19 2013 by
+# project ns (3.18) configured on Mon Sep  9 14:41:56 2013 by
 # waf 1.7.11 (abi 98, python 20703f0 on linux2)
-# using waf configure --with-pybindgen ../pybindgen-0.16.0.831
+# using ./waf configure --with-brite=BRITE --enable-examples --with-python=/usr/bin/python
 #
 ----------------------------------------
 Setting top to
@@ -38,7 +38,7 @@ ok
 ---------------------------------------------------------
 Checking for program python
 /usr/bin/python
-find program=['python'] paths=['/usr/lib/lightdm/lightdm', '/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin', '/usr/games'] var='PYTHON' -> '/usr/bin/python'
+find program=['python'] paths='' var='PYTHON' -> '/usr/bin/python'
 ['/usr/bin/python', '-c', 'import sys\nfor x in sys.version_info: print(str(x))']
 out: 2
 7
@@ -174,7 +174,7 @@ int main() { return 0; }
 ok
 ------------------------------------------------------------------------------------------------
 Checking for pybindgen location
-../pybindgen-0.16.0.831 (given)
+../pybindgen-0.16.0.831 (guessed)
 ------------------------------------------------------------------------------------------------
 Python module pybindgen
 ['/usr/bin/python', '-c', "\nimport pybindgen as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n    print(str(version))\nelse:\n    print('unknown version')\n"]
@@ -230,7 +230,7 @@ from /home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/bindings/python: Test 
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 42752080: cxx test.cc -> test.cc.1.o}
+	{task 42968464: cxx test.cc -> test.cc.1.o}
 ['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DHAVE_PYTHON_H=1', '../test.cc', '-c', '-o', 'test.cc.1.o']
 
 ------------------------------------------------------------------------------------------------
@@ -275,6 +275,45 @@ not found
 Checking boost includes
 from /home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/src: headers not found, please provide a --boost-includes argument (see help)
 not found
+------------------------------------------------------------------------------------------------
+Checking BRITE location
+BRITE (given)
+------------------------------------------------------------------------------------------------
+Checking for library dl
+==>
+
+int main(int argc, char **argv) {
+	(void)argc; (void)argv;
+	return 0;
+}
+
+<==
+[1/2] [32mcxx: build/.conf_check_a5f90842652328bf1e94d3e4cca69445/test.cpp -> build/.conf_check_a5f90842652328bf1e94d3e4cca69445/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DHAVE_PYTHON_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: build/.conf_check_a5f90842652328bf1e94d3e4cca69445/testbuild/test.cpp.1.o -> build/.conf_check_a5f90842652328bf1e94d3e4cca69445/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/build/.conf_check_a5f90842652328bf1e94d3e4cca69445/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-ldl']
+yes
+------------------------------------------------------------------------------------------------
+Checking for library brite
+==>
+
+#include "Brite.h"
+
+int main()
+{
+  return 0;
+}
+
+<==
+[1/2] [32mcxx: build/.conf_check_045369cb55555b498d4be85c1622e4dc/test.cpp -> build/.conf_check_045369cb55555b498d4be85c1622e4dc/testbuild/test.cpp.1.o
+[0m
+['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-I/home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/BRITE', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib/python2.7/dist-packages"', '-DPYTHONARCHDIR="/usr/local/lib/python2.7/dist-packages"', '-DHAVE_PYTHON_H=1', '-DDL=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
+[2/2] [33mcxxprogram: build/.conf_check_045369cb55555b498d4be85c1622e4dc/testbuild/test.cpp.1.o -> build/.conf_check_045369cb55555b498d4be85c1622e4dc/testbuild/testprog
+[0m
+['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/build/.conf_check_045369cb55555b498d4be85c1622e4dc/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/BRITE', '-L/home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/BRITE', '-lbrite', '-ldl']
+yes
 ------------------------------------------------------------------------------------------------
 Checking for click location
 not found
@@ -325,7 +364,7 @@ from /home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/src/core: Test does no
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 44856464: cxx test.cpp -> test.cpp.1.o}
+	{task 43204368: cxx test.cpp -> test.cpp.1.o}
 ['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
 
 not found
@@ -413,7 +452,7 @@ from /home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/src/core: Test does no
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 43651152: cxx test.cpp -> test.cpp.1.o}
+	{task 43957072: cxx test.cpp -> test.cpp.1.o}
 ['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
 
 not found
@@ -588,7 +627,7 @@ from /home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/src/core: Test does no
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 44935696: cxx test.cpp -> test.cpp.1.o}
+	{task 43203472: cxx test.cpp -> test.cpp.1.o}
 ['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
 
 not found
@@ -754,21 +793,15 @@ ok
 ------------------------------------------------------------------------------------------------
 Python module goocanvas
 ['/usr/bin/python', '-c', "\nimport goocanvas as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n    print(str(version))\nelse:\n    print('unknown version')\n"]
-err: Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-ImportError: No module named goocanvas
+out: 0.14.1
 
-not found
-from /home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/src/visualizer: Could not find the python module 'goocanvas'
+0.14.1
 ------------------------------------------------------------------------------------------------
 Python module pygraphviz
 ['/usr/bin/python', '-c', "\nimport pygraphviz as current_module\nversion = getattr(current_module, '__version__', None)\nif version is not None:\n    print(str(version))\nelse:\n    print('unknown version')\n"]
-err: Traceback (most recent call last):
-  File "<string>", line 2, in <module>
-ImportError: No module named pygraphviz
+out: 1.1
 
-not found
-from /home/shweta/ns3/ns3_igraph/ns-allinone-3.18/ns-3.18/src/visualizer: Could not find the python module 'pygraphviz'
+1.1
 ------------------------------------------------------------------------------------------------
 Checking for program sudo
 /usr/bin/sudo
