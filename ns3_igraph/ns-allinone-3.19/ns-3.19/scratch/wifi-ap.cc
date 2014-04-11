@@ -42,7 +42,7 @@ const double WINDOW_SIZE = 5.0;
 static bool g_verbose = true;
 NodeContainer stas;
 NodeContainer ap;
-map<int, mov_avg> rss_avg;
+std::map<int, mov_avg> rss_avg;
  
 std::ofstream fs;
 
@@ -122,7 +122,7 @@ PhyTxTrace (std::string context, Ptr<const Packet> packet, WifiMode mode, WifiPr
 void
 PhyStateTrace (std::string context, Time start, Time duration, enum WifiPhy::State state)
 {
-  if (g_vomv_erbose)
+  if (g_verbose)
     {
       std::cout << " state=" << state << " start=" << start << " duration=" << duration << std::endl;
     }
@@ -139,7 +139,8 @@ RSSITrace(std::string context, Ptr<const Packet> packet, uint16_t channelFreqMhz
   
    rss_avg[nodeId].time = Simulator::Now().GetSeconds()-rss_avg[nodeId].time ;
    rss_avg[nodeId].count += 1;
-   rss_avg[nodeId].value += signalDbm;
+   rss_avg[nodeId].value[0] += signalDbm;
+   rss_avg[nodeId].value[1] += noiseDbm;
    
 if (rss_avg[nodeId].time >= WINDOW_SIZE)
 {
@@ -165,7 +166,7 @@ rss_avg[nodeId].count = 0;
 }
 int main (int argc, char *argv[])
 {
-  std::string p_model = "ns3::PropagationLossModel";
+  std::string p_model = "ns3::JakesPropagationLossModel";
   CommandLine cmd;
   cmd.AddValue ("verbose", "Print trace information if true", g_verbose);
   cmd.AddValue ("pmodel", "Propagation Loss Model to use", p_model);
