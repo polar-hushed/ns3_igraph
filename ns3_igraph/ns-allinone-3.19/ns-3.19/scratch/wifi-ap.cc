@@ -37,7 +37,7 @@ struct mov_avg
    double value[2];
    double time;
 };
-const double WINDOW_SIZE = 5.0;
+const double WINDOW_SIZE = 50.0;
 
 static bool g_verbose = true;
 NodeContainer stas;
@@ -136,8 +136,8 @@ RSSITrace(std::string context, Ptr<const Packet> packet, uint16_t channelFreqMhz
   int nodeId;
   iss >> c >>  nodeId >> str; 
   Vector position = GetPosition(stas.Get(nodeId));
-  
-   rss_avg[nodeId].time = Simulator::Now().GetSeconds()-rss_avg[nodeId].time ;
+ 
+   rss_avg[nodeId].time = Simulator::Now().GetSeconds()-rss_avg[nodeId].time ; 
    rss_avg[nodeId].count += 1;
    rss_avg[nodeId].value[0] += signalDbm;
    rss_avg[nodeId].value[1] += noiseDbm;
@@ -189,9 +189,10 @@ int main (int argc, char *argv[])
   stas.Create (5);
   ap.Create (3);
   for (int i = 0; i < 5; ++i) {
-		mov_avg temp;
-		temp.count = 0; temp.time=0;temp.value[0]=0; temp.value[1]=0;
-		rss_avg[i] = temp;
+		rss_avg[i].count = 0;
+		rss_avg[i].time = 0;
+		rss_avg[i].value[0] = 0;
+		rss_avg[i].value[1] = 0;
   }
 
   // give packet socket powers to nodes.
