@@ -137,12 +137,12 @@ RSSITrace(std::string context, Ptr<const Packet> packet, uint16_t channelFreqMhz
   iss >> c >>  nodeId >> str; 
   Vector position = GetPosition(stas.Get(nodeId));
  
-   rss_avg[nodeId].time = Simulator::Now().GetSeconds()-rss_avg[nodeId].time ; 
+   double time = Simulator::Now().GetSeconds()-rss_avg[nodeId].time ; 
    rss_avg[nodeId].count += 1;
    rss_avg[nodeId].value[0] += signalDbm;
    rss_avg[nodeId].value[1] += noiseDbm;
    
-if (rss_avg[nodeId].time >= WINDOW_SIZE)
+if (time >= WINDOW_SIZE)
 {
 if (g_verbose)
     {
@@ -153,7 +153,7 @@ if (g_verbose)
    fs << Simulator::Now().GetSeconds() << " " <<  nodeId << " position (" << position.x << "," << position.y ; 
    fs << ") signalStrength=" << rss_avg[nodeId].value[0]/rss_avg[nodeId].count << " Noise=" << rss_avg[nodeId].value[1]/rss_avg[nodeId].count << std::endl;
 
-rss_avg[nodeId].time=0;
+rss_avg[nodeId].time=Simulator::Now().GetSeconds();
 
 rss_avg[nodeId].value[0]=0;
 
