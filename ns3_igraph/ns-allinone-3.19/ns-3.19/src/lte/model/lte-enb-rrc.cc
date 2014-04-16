@@ -214,10 +214,10 @@ UeManager::DoInitialize ()
     lcinfo.lcGroup = 0; // all SRBs always mapped to LCG 0
     lcinfo.qci = EpsBearer::GBR_CONV_VOICE; // not sure why the FF API requires a CQI even for SRBs...
     lcinfo.isGbr = true;
-    lcinfo.mbrUl = 1e6;
-    lcinfo.mbrDl = 1e6;
-    lcinfo.gbrUl = 1e4;
-    lcinfo.gbrDl = 1e4;
+    lcinfo.mbrUl = static_cast<uint64_t>(1e6);
+    lcinfo.mbrDl = static_cast<uint64_t>(1e6);
+    lcinfo.gbrUl = static_cast<uint64_t>(1e4);
+    lcinfo.gbrDl = static_cast<uint64_t>(1e4);
     m_rrc->m_cmacSapProvider->AddLc (lcinfo, rlc->GetLteMacSapUser ());
   }
 

@@ -265,7 +265,9 @@ int main (int argc, char *argv[])
 //  Config::Connect ("/NodeList/*/DeviceList/*/Mac/MacTx", MakeCallback (&DevTxTrace));
  // Config::Connect ("/NodeList/*/DeviceList/*/Mac/MacRx", MakeCallback (&DevRxTrace));
   std::ostringstream oss[5];
-  fs.open(p_model.c_str());
+  const char *filename = p_model.c_str();
+  fs.open((char *)filename[5]);
+  std::cout << "FILE OPENED " ; 
   for (unsigned int i=0; i < stas.GetN();++i)
   {
     oss[i] << "NodeList/"<< stas.Get(i)->GetId() << "/DeviceList/*/$ns3::WifiNetDevice/Phy/MonitorSnifferRx";

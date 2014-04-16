@@ -871,7 +871,7 @@ YansWifiPhy::SetGuardInterval (bool guardInterval)
 uint32_t
 YansWifiPhy::GetFrequency (void) const
 {
-  return m_channelStartingFrequency;
+  return static_cast<uint32_t>(m_channelStartingFrequency);
 }
 
 uint32_t

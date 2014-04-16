@@ -146,8 +146,8 @@ main (int argc, char *argv[])
   NodeContainer client;
   NodeContainer server;
   
-  int numClients = percClients * nLeafNodes;
-  int numServers = percServers * nLeafNodes;
+  int numClients = static_cast<int>(percClients * nLeafNodes);
+  int numServers = static_cast<int>(percServers * nLeafNodes);
   client.Create (numClients);
   stack.Install (client);
   server.Create (numServers);

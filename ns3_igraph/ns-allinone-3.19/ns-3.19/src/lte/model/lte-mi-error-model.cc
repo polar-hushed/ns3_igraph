@@ -349,7 +349,7 @@ LteMiErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, ui
               static const double scalingCoeffQpsk = 
                 (MI_MAP_QPSK_SIZE - 1) / (MI_map_qpsk_axis[MI_MAP_QPSK_SIZE-1] - MI_map_qpsk_axis[0]);
               double sinrIndexDouble = (sinrLin -  MI_map_qpsk_axis[0]) * scalingCoeffQpsk + 1;
-              uint32_t sinrIndex = std::max(0.0, std::floor (sinrIndexDouble));
+              uint32_t sinrIndex = static_cast<uint32_t>(std::max(0.0, std::floor (sinrIndexDouble)));
               NS_ASSERT_MSG (sinrIndex < MI_MAP_QPSK_SIZE, "MI map out of data");
               MI = MI_map_qpsk[sinrIndex];
             }
@@ -371,7 +371,7 @@ LteMiErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, ui
                   static const double scalingCoeff16qam = 
                     (MI_MAP_16QAM_SIZE - 1) / (MI_map_16qam_axis[MI_MAP_16QAM_SIZE-1] - MI_map_16qam_axis[0]);
                   double sinrIndexDouble = (sinrLin -  MI_map_16qam_axis[0]) * scalingCoeff16qam + 1;
-                  uint32_t sinrIndex = std::max(0.0, std::floor (sinrIndexDouble));
+                  uint32_t sinrIndex = static_cast<uint32_t>(std::max(0.0, std::floor (sinrIndexDouble)));
                   NS_ASSERT_MSG (sinrIndex < MI_MAP_16QAM_SIZE, "MI map out of data");
                   MI = MI_map_16qam[sinrIndex];
                 }
@@ -391,7 +391,7 @@ LteMiErrorModel::Mib (const SpectrumValue& sinr, const std::vector<int>& map, ui
                   static const double scalingCoeff64qam = 
                     (MI_MAP_64QAM_SIZE - 1) / (MI_map_64qam_axis[MI_MAP_64QAM_SIZE-1] - MI_map_64qam_axis[0]);
                   double sinrIndexDouble = (sinrLin -  MI_map_64qam_axis[0]) * scalingCoeff64qam + 1;
-                  uint32_t sinrIndex = std::max(0.0, std::floor (sinrIndexDouble));
+                  uint32_t sinrIndex = static_cast<uint32_t>(std::max(0.0, std::floor (sinrIndexDouble)));
                   NS_ASSERT_MSG (sinrIndex < MI_MAP_64QAM_SIZE, "MI map out of data");
                   MI = MI_map_64qam[sinrIndex];
                 }
@@ -561,7 +561,7 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
           codeBitsSum += miHistory.at (i).m_codeBits;
           miSum += (miHistory.at (i).m_mi*miHistory.at (i).m_codeBits);
         }
-      codeBitsSum += (((double)size*8.0) / McsEcrTable [mcs]);
+      codeBitsSum += static_cast<uint16_t>((((double)size*8.0) / McsEcrTable [mcs]));
       miSum += (tbMi*(((double)size*8.0) / McsEcrTable [mcs]));
       Reff = miHistory.at (0).m_infoBits / (double)codeBitsSum; // information bits are the size of the first TB
       MI = miSum / (double)codeBitsSum;      
@@ -593,7 +593,7 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
   else
     {
       L = 24;
-      C = ceil ((double)B / ((double)(Z-L)));
+      C = static_cast<uint32_t>(ceil ((double)B / ((double)(Z-L))));
       B1 = B + C * L;
     }
   // first segmentation: K+ = minimum K in table such that C * K >= B1
@@ -657,7 +657,7 @@ LteMiErrorModel::GetTbDecodificationStats (const SpectrumValue& sinr, const std:
       // second segmentation size: K- = maximum K in table such that K < K+
       Kminus = cbSizeTable[KplusId-1 > 0 ? KplusId-1 : 0];
       deltaK = Kplus - Kminus;
-      Cminus = floor ((((double) C * Kplus) - (double)B1) / (double)deltaK);
+      Cminus = static_cast<uint32_t>(floor ((((double) C * Kplus) - (double)B1) / (double)deltaK));
       Cplus = C - Cminus;
     }
   NS_LOG_INFO ("--------------------LteMiErrorModel: TB size of " << B << " needs of " << B1 << " bits reparted in " << C << " CBs as "<< Cplus << " block(s) of " << Kplus << " and " << Cminus << " of " << Kminus);

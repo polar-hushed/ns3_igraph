@@ -508,11 +508,11 @@ BriteTopologyHelper::ConstructTopology ()
       // Set the link delay
       // The brite value for delay is given in milliseconds
       m_britePointToPointHelper.SetChannelAttribute ("Delay",
-                                                     TimeValue (MilliSeconds ((*it).delay)));
+                                                     TimeValue (MilliSeconds (static_cast<uint64_t>((*it).delay))));
 
       // The brite value for data rate is given in Mbps
       m_britePointToPointHelper.SetDeviceAttribute ("DataRate",
-                                                    DataRateValue (DataRate ((*it).bandwidth * mbpsToBps)));
+                                                    DataRateValue (DataRate (static_cast<uint64_t>((*it).bandwidth * mbpsToBps))));
 
       m_netDevices.push_back ( new NetDeviceContainer ( m_britePointToPointHelper.Install (m_nodes.Get ((*it).srcId), m_nodes.Get ((*it).destId))));
 

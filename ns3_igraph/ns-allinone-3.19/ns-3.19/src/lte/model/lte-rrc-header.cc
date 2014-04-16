@@ -703,9 +703,9 @@ RrcAsn1Header::SerializePlmnIdentity (uint32_t plmnId) const
   SerializeSequenceOf (nDig,3,2);
   for (int i = nDig - 1; i >= 0; i--)
     {
-      int n = floor (plmnId / pow (10,i));
+      int n = static_cast<int>(floor (plmnId / pow (10,i)));
       SerializeInteger (n,0,9);
-      plmnId -= n * pow (10,i);
+      plmnId -= static_cast<uint32_t>(n * pow (10,i));
     }
 
   // cellReservedForOperatorUse 
@@ -3014,7 +3014,7 @@ RrcAsn1Header::DeserializePlmnIdentity (uint32_t *plmnId, Buffer::Iterator bIter
   for (int j = mncDigits - 1; j >= 0; j--)
     {
       bIterator = DeserializeInteger (&n,0,9,bIterator);
-      mnc += n * pow (10,j);
+      mnc += static_cast<int>(n * pow (10,j));
     }
 
   *plmnId = mnc;

@@ -445,7 +445,7 @@ WifiPhy::CalculateTxDuration (uint32_t size, WifiTxVector txvector, WifiPreamble
     + GetPlcpHtSigHeaderDurationMicroSeconds (payloadMode, preamble)
     + GetPlcpHtTrainingSymbolDurationMicroSeconds (payloadMode, preamble,txvector)
     + GetPayloadDurationMicroSeconds (size, txvector);
-  return MicroSeconds (duration);
+  return MicroSeconds (static_cast<uint64_t>(duration));
 }
 
 

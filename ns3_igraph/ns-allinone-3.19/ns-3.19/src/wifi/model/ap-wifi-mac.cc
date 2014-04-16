@@ -667,7 +667,7 @@ ApWifiMac::DoInitialize (void)
     {
       if (m_enableBeaconJitter)
         {
-          int64_t jitter = m_beaconJitter->GetValue (0, m_beaconInterval.GetMicroSeconds ());
+          int64_t jitter = static_cast<int64_t>(m_beaconJitter->GetValue (0, m_beaconInterval.GetMicroSeconds ()));
           NS_LOG_DEBUG ("Scheduling initial beacon for access point " << GetAddress() << " at time " << jitter << " microseconds");
           m_beaconEvent = Simulator::Schedule (MicroSeconds (jitter), &ApWifiMac::SendOneBeacon, this);
         }

@@ -316,7 +316,7 @@ TdBetFfMacScheduler::DoCschedUeConfigReq (const struct FfMacCschedSapProvider::C
   std::map <uint16_t,uint8_t>::iterator it = m_uesTxMode.find (params.m_rnti);
   if (it == m_uesTxMode.end ())
     {
-      m_uesTxMode.insert (std::pair <uint16_t, double> (params.m_rnti, params.m_transmissionMode));
+      m_uesTxMode.insert (std::pair <uint16_t, char> (params.m_rnti, params.m_transmissionMode));
       // generate HARQ buffers
       m_dlHarqCurrentProcessId.insert (std::pair <uint16_t,uint8_t > (params.m_rnti, 0));
       DlHarqProcessesStatus_t dlHarqPrcStatus;

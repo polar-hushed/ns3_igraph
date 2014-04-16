@@ -236,7 +236,7 @@ Building::GetRoomX (Vector position) const
     {
       double xLength = m_buildingBounds.xMax - m_buildingBounds.xMin;
       double x = position.x - m_buildingBounds.xMin;
-      n = floor (m_roomsX * x/xLength) + 1;
+      n = static_cast<uint16_t>(floor (m_roomsX * x/xLength) + 1);
       NS_LOG_LOGIC ("xLength=" << xLength << ", x=" << x << ", m_roomsX=" << m_roomsX);
     }
   NS_LOG_LOGIC ("RoomX: " << n);
@@ -257,7 +257,7 @@ Building::GetRoomY (Vector position) const
     {
       double yLength = m_buildingBounds.yMax - m_buildingBounds.yMin;
       double y = position.y - m_buildingBounds.yMin;
-      n = floor (m_roomsY * y/yLength) + 1;
+      n = static_cast<uint16_t>(floor (m_roomsY * y/yLength) + 1);
       NS_LOG_LOGIC ("yLength=" << yLength << ", y=" << y << ", m_roomsY=" << m_roomsY);
     }
   NS_LOG_LOGIC ("RoomY: " << n);
@@ -278,7 +278,7 @@ Building::GetFloor (Vector position) const
     {
       double zLength = m_buildingBounds.zMax - m_buildingBounds.zMin;
       double z = position.z - m_buildingBounds.zMin;
-      n = floor (m_floors * z/zLength) + 1;
+      n = static_cast<int>(floor (m_floors * z/zLength) + 1);
       NS_LOG_LOGIC ("zLength=" << zLength << ", z=" << z << ", m_floors=" << m_floors);
     }
   NS_LOG_LOGIC ("floor: " << n);

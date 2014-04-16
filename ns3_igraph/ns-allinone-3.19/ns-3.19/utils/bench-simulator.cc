@@ -84,7 +84,7 @@ Bench::RunBench (void)
   time.Start ();
   for (uint32_t i = 0; i < m_population; ++i)
     {
-      Time at = NanoSeconds (m_rand->GetValue ());
+      Time at = NanoSeconds (static_cast<uint64_t>(m_rand->GetValue ()));
       Simulator::Schedule (at, &Bench::Cb, this);
     }
   init = time.End ();
@@ -118,7 +118,7 @@ Bench::Cb (void)
     }
   DEB ("event at " << Simulator::Now ().GetSeconds () << "s");
 
-  Time after = NanoSeconds (m_rand->GetValue ());
+  Time after = NanoSeconds (static_cast<uint64_t>(m_rand->GetValue ()));
   Simulator::Schedule (after, &Bench::Cb, this);
   ++m_count;
 }

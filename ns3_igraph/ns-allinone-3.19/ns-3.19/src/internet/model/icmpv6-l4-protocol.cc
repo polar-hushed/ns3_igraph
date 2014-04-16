@@ -190,7 +190,7 @@ void Icmpv6L4Protocol::DoDAD (Ipv6Address target, Ptr<Ipv6Interface> interface)
 
   /* update last packet UID */
   interface->SetNsDadUid (target, p->GetUid ());
-  Simulator::Schedule (Time (MilliSeconds (m_solicitationJitter->GetValue ())), &Ipv6Interface::Send, interface, p, Ipv6Address::MakeSolicitedAddress (target));
+  Simulator::Schedule (Time (MilliSeconds (static_cast<uint64_t>(m_solicitationJitter->GetValue ()))), &Ipv6Interface::Send, interface, p, Ipv6Address::MakeSolicitedAddress (target));
 }
 
 enum IpL4Protocol::RxStatus Icmpv6L4Protocol::Receive (Ptr<Packet> packet, Ipv4Header const &header,  Ptr<Ipv4Interface> interface)
@@ -993,7 +993,7 @@ void Icmpv6L4Protocol::SendNS (Ipv6Address src, Ipv6Address dst, Ipv6Address tar
   else
     {
       NS_LOG_LOGIC ("Destination is Multicast, using DelayedSendMessage");
-      Simulator::Schedule (Time (MilliSeconds (m_solicitationJitter->GetValue ())), &Icmpv6L4Protocol::DelayedSendMessage, this, p, src, dst, 255);
+      Simulator::Schedule (Time (MilliSeconds (static_cast<uint64_t>(m_solicitationJitter->GetValue ()))), &Icmpv6L4Protocol::DelayedSendMessage, this, p, src, dst, 255);
     }
 }
 
@@ -1021,7 +1021,7 @@ void Icmpv6L4Protocol::SendRS (Ipv6Address src, Ipv6Address dst,  Address hardwa
   else
     {
       NS_LOG_LOGIC ("Destination is Multicast, using DelayedSendMessage");
-      Simulator::Schedule (Time (MilliSeconds (m_solicitationJitter->GetValue ())), &Icmpv6L4Protocol::DelayedSendMessage, this, p, src, dst, 255);
+      Simulator::Schedule (Time (MilliSeconds (static_cast<uint64_t>(m_solicitationJitter->GetValue ()))), &Icmpv6L4Protocol::DelayedSendMessage, this, p, src, dst, 255);
     }
 }
 

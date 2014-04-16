@@ -272,14 +272,14 @@ ArpL3Protocol::Lookup (Ptr<Packet> packet, Ipv4Address destination,
               NS_LOG_LOGIC ("node="<<m_node->GetId ()<<
                             ", dead entry for " << destination << " expired -- send arp request");
               entry->MarkWaitReply (packet);
-              Simulator::Schedule (Time (MilliSeconds (m_requestJitter->GetValue ())), &ArpL3Protocol::SendArpRequest, this, cache, destination);
+              Simulator::Schedule (Time (MilliSeconds (static_cast<uint64_t>(m_requestJitter->GetValue ()))), &ArpL3Protocol::SendArpRequest, this, cache, destination);
             } 
           else if (entry->IsAlive ()) 
             {
               NS_LOG_LOGIC ("node="<<m_node->GetId ()<<
                             ", alive entry for " << destination << " expired -- send arp request");
               entry->MarkWaitReply (packet);
-              Simulator::Schedule (Time (MilliSeconds (m_requestJitter->GetValue ())), &ArpL3Protocol::SendArpRequest, this, cache, destination);
+              Simulator::Schedule (Time (MilliSeconds (static_cast<uint64_t>(m_requestJitter->GetValue ()))), &ArpL3Protocol::SendArpRequest, this, cache, destination);
             } 
           else if (entry->IsWaitReply ()) 
             {
@@ -319,7 +319,7 @@ ArpL3Protocol::Lookup (Ptr<Packet> packet, Ipv4Address destination,
                     ", no entry for " << destination << " -- send arp request");
       entry = cache->Add (destination);
       entry->MarkWaitReply (packet);
-      Simulator::Schedule (Time (MilliSeconds (m_requestJitter->GetValue ())), &ArpL3Protocol::SendArpRequest, this, cache, destination);
+      Simulator::Schedule (Time (MilliSeconds (static_cast<uint64_t>(m_requestJitter->GetValue ()))), &ArpL3Protocol::SendArpRequest, this, cache, destination);
     }
   return false;
 }

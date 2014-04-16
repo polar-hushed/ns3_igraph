@@ -50,11 +50,11 @@ namespace ns3 {
 // = TTI - 1 symbol for SRS - 1ns as margin to avoid overlapping simulator events
 // (symbol duration in nanoseconds = TTI / 14 (rounded))
 // in other words, duration of data portion of UL subframe = TTI*(13/14) -1ns
-static const Time UL_DATA_DURATION = NanoSeconds (1e6 - 71429 - 1); 
+static const Time UL_DATA_DURATION = NanoSeconds (static_cast<uint64_t>(1e6 - 71429 - 1)); 
 
 // delay from subframe start to transmission of SRS 
 // = TTI - 1 symbol for SRS 
-static const Time UL_SRS_DELAY_FROM_SUBFRAME_START = NanoSeconds (1e6 - 71429); 
+static const Time UL_SRS_DELAY_FROM_SUBFRAME_START = NanoSeconds (static_cast<uint64_t>(1e6 - 71429)); 
 
 
 

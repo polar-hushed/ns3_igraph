@@ -135,7 +135,7 @@ A3RsrpHandoverAlgorithm::DoReportUeMeas (uint16_t rnti,
           && !measResults.measResultListEutra.empty ())
         {
           uint16_t bestNeighbourCellId = 0;
-          uint8_t bestNeighbourRsrp = -std::numeric_limits<double>::infinity ();
+          uint8_t bestNeighbourRsrp = -std::numeric_limits<uint8_t>::infinity ();
 
           for (std::list <LteRrcSap::MeasResultEutra>::iterator it = measResults.measResultListEutra.begin ();
                it != measResults.measResultListEutra.end ();

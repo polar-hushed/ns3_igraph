@@ -169,7 +169,7 @@ TraceFadingLossModel::DoCalcRxPowerSpectralDensity (
             {
               std::map <ChannelRealizationId_t, Ptr<UniformRandomVariable> >::iterator itVar;
               itVar = m_startVariableMap.find ((*itOff2).first);
-              (*itOff2).second = (*itVar).second->GetValue ();
+              (*itOff2).second = static_cast<int>((*itVar).second->GetValue ());
             }
           m_lastWindowUpdate = Simulator::Now ();
         }
@@ -188,7 +188,7 @@ TraceFadingLossModel::DoCalcRxPowerSpectralDensity (
         }
       ChannelRealizationId_t mobilityPair = std::make_pair (a,b);
       m_startVariableMap.insert (std::pair<ChannelRealizationId_t,Ptr<UniformRandomVariable> > (mobilityPair, startV));
-      m_windowOffsetsMap.insert (std::pair<ChannelRealizationId_t,int> (mobilityPair, startV->GetValue ()));
+      m_windowOffsetsMap.insert (std::pair<ChannelRealizationId_t,int> (mobilityPair, static_cast<int>(startV->GetValue ())));
     }
 
   

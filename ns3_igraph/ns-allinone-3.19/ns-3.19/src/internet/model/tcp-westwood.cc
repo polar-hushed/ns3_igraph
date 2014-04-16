@@ -305,7 +305,7 @@ TcpWestwood::Retransmit (void)
     return;
 
   // Upon an RTO, adjust cwnd and ssthresh based on the estimated BW
-  m_ssThresh = std::max (static_cast<double> (2 * m_segmentSize), m_currentBW.Get() * static_cast<double> (m_minRtt.GetSeconds()));
+  m_ssThresh = static_cast<uint32_t>(std::max (2.0 * m_segmentSize, m_currentBW.Get() * m_minRtt.GetSeconds()));
   m_cWnd = m_segmentSize;
 
   // Restart from highest ACK
