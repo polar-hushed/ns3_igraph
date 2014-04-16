@@ -265,8 +265,7 @@ int main (int argc, char *argv[])
 //  Config::Connect ("/NodeList/*/DeviceList/*/Mac/MacTx", MakeCallback (&DevTxTrace));
  // Config::Connect ("/NodeList/*/DeviceList/*/Mac/MacRx", MakeCallback (&DevRxTrace));
   std::ostringstream oss[5];
-  const char *filename = p_model.c_str();
-  fs.open((char *)filename[5]);
+  fs.open(p_model.c_str());
   std::cout << "FILE OPENED " ; 
   for (unsigned int i=0; i < stas.GetN();++i)
   {
@@ -289,7 +288,7 @@ int main (int argc, char *argv[])
 */
   Simulator::Run ();
 
-  Simulator::Stop (Seconds (1000.0));
+  Simulator::Stop (Seconds (100.0));
   Simulator::Destroy ();
   fs.close();
   return 0;
