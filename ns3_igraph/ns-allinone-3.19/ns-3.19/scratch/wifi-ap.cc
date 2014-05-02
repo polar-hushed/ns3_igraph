@@ -251,9 +251,9 @@ int main (int argc, char *argv[])
   	onoff[i].Install (stas.Get (4));
 	onoff[i].SetConstantRate (DataRate ("500kb/s"));
   	apps[i].Start (Seconds (0.5));
-  	apps[i].Stop (Seconds (43.0));
+  	apps[i].Stop (Seconds (90.0));
 
-  	Simulator::Stop (Seconds (44.0));
+  	Simulator::Stop (Seconds (100.0));
 	if (i >= 2)
         {
   		pos.x = 100;
