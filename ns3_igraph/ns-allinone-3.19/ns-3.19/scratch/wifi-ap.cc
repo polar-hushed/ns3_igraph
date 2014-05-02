@@ -252,6 +252,8 @@ int main (int argc, char *argv[])
 	onoff[i].SetConstantRate (DataRate ("500kb/s"));
   	apps[i].Start (Seconds (0.5));
   	apps[i].Stop (Seconds (43.0));
+
+  	Simulator::Stop (Seconds (44.0));
 	if (i >= 2)
         {
   		pos.x = 100;
@@ -288,7 +290,6 @@ int main (int argc, char *argv[])
 */
   Simulator::Run ();
 
-  Simulator::Stop (Seconds (100.0));
   Simulator::Destroy ();
   fs.close();
   return 0;

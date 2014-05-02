@@ -14,12 +14,11 @@ hostname
 PBS_HOME=/home/shweta.jain/ns3_igraph/branches/localization/ns3_igraph/ns-allinone-3.19/ns-3.19
 
 cd $PBS_HOME
-
 pmodel=("ns3::JakesPropagationLossModel"  "ns3::Kun2600MhzPropagationLossModel"  "ns3::OkumuraHataPropagationLossModel"  "ns3::ItuR1411LosPropagationLossModel"  "ns3::ItuR1411NlosOverRooftopPropagationLossModel")
 for i in "${pmodel[@]}"; do
 	echo $i
 	echo "DONE"
-        ./waf --run "scratch/wifi-ap --pmodel=$i --verbose=false" > ns3_job.out 2>&1
+        temp/scratch/wifi-ap --pmodel=$i --verbose=false > ns3_job.out 2>&1
 
 done
 
