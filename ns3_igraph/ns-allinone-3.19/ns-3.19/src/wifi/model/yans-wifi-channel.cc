@@ -52,9 +52,17 @@ YansWifiChannel::GetTypeId (void)
                    MakePointerAccessor (&YansWifiChannel::m_delay),
                    MakePointerChecker<PropagationDelayModel> ())
 //SHWETA - incomplete
-    .AddTraceSource ("YansRss",
-                     "The RxPower at a node",
-                     MakeTraceSourceAccessor (&YansWifiChannel::m_RssiTrace))
+/*
+	.AddAttribute ("MultipathFadingModel", "A pointer to the multipath fading model attached to this channel.",
+                   PointerValue (),
+                   MakePointerAccessor (&YansWifiChannel::m_fading),
+                   MakePointerChecker<MultipathFadingModel> ())
+    	.AddAttribute ("ShadowingModel", "A pointer to the shadow fading model attached to this channel.",
+                   PointerValue (),
+                   MakePointerAccessor (&YansWifiChannel::m_shadowing),
+                   MakePointerChecker<MultipathFadingModel> ())
+  */  
+
    ;
  
   return tid;
@@ -154,9 +162,4 @@ YansWifiChannel::AssignStreams (int64_t stream)
   return (currentStream - stream);
 }
 
-void
-YansWifiChannel::NotifyYansRss (Ptr<const Packet> packet, double rssi)
-{
-  m_RssiTrace(packet,rssi);
-}
 } // namespace ns3

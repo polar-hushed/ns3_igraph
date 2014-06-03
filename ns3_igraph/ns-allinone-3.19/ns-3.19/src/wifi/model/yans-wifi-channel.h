@@ -128,6 +128,8 @@ private:
   PhyList m_phyList; //!< List of YansWifiPhys connected to this YansWifiChannel
   Ptr<PropagationLossModel> m_loss; //!< Propagation loss model
   Ptr<PropagationDelayModel> m_delay; //!< Propagation delay model
+  //Ptr<MultipathFadingModel> m_fading; //!< Multipath fading model
+ // Ptr<ShadowingModel> m_shadowing; //!< Shadow fading model
 
   TracedCallback<Ptr<const Packet>, double> m_RssiTrace;
 };

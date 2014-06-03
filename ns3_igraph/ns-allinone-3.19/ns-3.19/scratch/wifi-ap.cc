@@ -37,7 +37,7 @@ struct mov_avg
    double value[2];
    double time;
 };
-const double WINDOW_SIZE = 50.0;
+const double WINDOW_SIZE = 5.0;
 
 static bool g_verbose = true;
 NodeContainer stas;
