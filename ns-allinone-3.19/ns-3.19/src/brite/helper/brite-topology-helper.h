@@ -103,6 +103,7 @@ public:
    *  \param stack Internet stack to assign to nodes in topology
    */
   void BuildBriteTopology (InternetStackHelper& stack);
+  void AdjustWeights(); 
   void PrintBriteTopology ();
 
   /**

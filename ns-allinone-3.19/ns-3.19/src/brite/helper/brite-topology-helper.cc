@@ -467,6 +467,12 @@ BriteTopologyHelper::BuildBriteTopology (InternetStackHelper& stack, const uint3
 
   ConstructTopology ();
 }
+void
+BriteTopologyHelper::AdjustWeights ()
+{
+    assert(m_topology != NULL);
+    m_topology->AdjustWeights();
+}
 
 void
 BriteTopologyHelper::AssignIpv4Addresses (Ipv4AddressHelper& address)

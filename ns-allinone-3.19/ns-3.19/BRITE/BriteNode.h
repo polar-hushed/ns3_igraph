@@ -53,6 +53,7 @@ class BriteNode {
   int GetAddr() { return nodeAddr; }
   int GetInDegree() { return inDegree; }
   int GetOutDegree() { return outDegree; }
+  int GetWeight() { return igraphWt; } //Shweta
   Color GetColor() { return nodeColor; }
   NodeConf* GetNodeInfo() { return nodeInfo; }
   
@@ -60,6 +61,7 @@ class BriteNode {
   void SetAddr(int addr) { nodeAddr = addr; }
   void SetInDegree(int degree) { inDegree = degree; }
   void SetOutDegree(int degree) { outDegree = degree; }
+  void SetWeight(int wt) { igraphWt = wt; } //Shweta
   void SetColor(Color col) { nodeColor = col; }
   void SetNodeInfo(NodeConf*  info) { nodeInfo = info; }
 
@@ -69,6 +71,7 @@ class BriteNode {
   int nodeAddr;
   int inDegree;
   int outDegree;
+  int igraphWt; //Shweta
   Color nodeColor;
   NodeConf* nodeInfo;
 

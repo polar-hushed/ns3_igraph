@@ -41,6 +41,7 @@ BriteNode::BriteNode(int i) {
   inDegree = 0;
   outDegree = 0;
   nodeColor = BLACK;
+  igraphWt = outDegree; //Shweta
 
 }
 

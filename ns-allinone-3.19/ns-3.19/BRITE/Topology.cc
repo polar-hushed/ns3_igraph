@@ -312,6 +312,44 @@ void Topology::OtterOutput(char* filename) {
 }
 
 
+void 
+Topology::AdjustWeights()
+{
+   AdjustNodeWtIgraph();
+   AdjustEdgeWtIgraph();
+}
+
+void Topology::AdjustNodeWtIgraph() {
+  /* Populate Incidence list */
+  list<Edge*>::iterator el;
+   
+  /* Look for Links */
+  for (el = g->edges.begin(); el != g->edges.end(); el++) {
+    BriteNode* Src = (*el)->GetSrc();
+    BriteNode* Dst = (*el)->GetDst();
+    assert(Src != NULL && Dst != NULL);
+    
+    int max = Src->GetOutDegree() > Dst->GetOutDegree()? Src->GetOutDegree():Dst->GetOutDegree();
+    Src->SetWeight(max/((float)Src->GetOutDegree())+Src->GetWeight());
+    Dst->SetWeight(max/((float)Dst->GetOutDegree())+Dst->GetWeight());
+   }
+}
+
+
+void Topology::AdjustEdgeWtIgraph() {
+  /* Populate Incidence list */
+  list<Edge*>::iterator el;
+   
+  /* Look for Links */
+  for (el = g->edges.begin(); el != g->edges.end(); el++) {
+    BriteNode* Src = (*el)->GetSrc();
+    BriteNode* Dst = (*el)->GetDst();
+    assert(Src != NULL && Dst != NULL);
+    
+    float max = Src->GetWeight() > Dst->GetWeight()? Src->GetWeight():Dst->GetWeight();
+    (*el)->GetConf()->SetBW(max*((*el)->GetConf()->GetBW()));
+   }
+}
 void Topology::Classify() {
 
   /* Populate Incidence list */
@@ -469,6 +507,5 @@ void Topology::Classify() {
       }
     }
   }
-}
-
+ }
 } // namespace brite
