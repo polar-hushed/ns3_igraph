@@ -103,8 +103,9 @@ public:
    *  \param stack Internet stack to assign to nodes in topology
    */
   void BuildBriteTopology (InternetStackHelper& stack);
-  void AdjustWeights(); 
+  void AdjustWeights(int type); 
   void PrintBriteTopology ();
+  brite::BriteNode* GetBriteNode (uint32_t nodeNum);
 
   /**
    * Create NS3 topology using information generated from BRITE and configure topology for MPI use.

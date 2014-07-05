@@ -313,6 +313,12 @@ BriteTopologyHelper::GetNodeForAs (uint32_t asNum, uint32_t nodeNum)
   return m_nodesByAs[asNum]->Get (nodeNum);
 }
 
+brite::BriteNode*
+BriteTopologyHelper::GetBriteNode (uint32_t nodeNum)
+{
+  brite::Graph *g = m_topology->GetGraph ();
+  return g->GetNodePtr(nodeNum);
+}
 uint32_t
 BriteTopologyHelper::GetNNodesForAs (uint32_t asNum)
 {
@@ -468,10 +474,12 @@ BriteTopologyHelper::BuildBriteTopology (InternetStackHelper& stack, const uint3
   ConstructTopology ();
 }
 void
-BriteTopologyHelper::AdjustWeights ()
+BriteTopologyHelper::AdjustWeights (int type)
 {
     assert(m_topology != NULL);
-    m_topology->AdjustWeights();
+    NS_LOG_INFO("Igraph: Adjusting weights  for the topology");
+    m_topology->AdjustWeights(type);
+
 }
 
 void
