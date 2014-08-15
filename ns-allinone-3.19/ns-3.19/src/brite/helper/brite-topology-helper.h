@@ -106,6 +106,7 @@ public:
   void AdjustWeights(int type); 
   void PrintBriteTopology ();
   brite::BriteNode* GetBriteNode (uint32_t nodeNum);
+  std::list<brite::Edge*> GetBriteEdgeList();
 
   /**
    * Create NS3 topology using information generated from BRITE and configure topology for MPI use.
@@ -150,6 +151,7 @@ public:
    *
    */
   Ptr<Node> GetNodeForAs (uint32_t asNum, uint32_t nodeNum);
+  Ptr<Node> GetNode (uint32_t nodeNum);
 
   /**
     * Returns the number of AS created in the topology
@@ -297,6 +299,8 @@ private:
   /// stores the number of edges created in the BRITE topology
   uint32_t m_numEdges;
 
+  std::list<brite::Edge*> m_edgeList;
+  std::list<brite::Edge*>::iterator m_el;
   /**
    * The BRITE code generates multiple nodes and edges. Each
    * node and edge is stored in a BriteNodeInfo or BriteEdgeInfo
