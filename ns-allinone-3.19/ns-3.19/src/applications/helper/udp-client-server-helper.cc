@@ -102,12 +102,20 @@ UdpClientHelper::Install (NodeContainer c)
   for (NodeContainer::Iterator i = c.Begin (); i != c.End (); ++i)
     {
       Ptr<Node> node = *i;
-      Ptr<UdpClient> client = m_factory.Create<UdpClient> ();
-      node->AddApplication (client);
-      apps.Add (client);
+      m_client = m_factory.Create<UdpClient> ();
+      node->AddApplication (m_client);
+      apps.Add (m_client);
     }
   return apps;
 }
+
+Ptr<UdpClient>
+UdpClientHelper::GetClient (void)
+{
+  return m_client;
+}
+
+
 
 UdpTraceClientHelper::UdpTraceClientHelper ()
 {

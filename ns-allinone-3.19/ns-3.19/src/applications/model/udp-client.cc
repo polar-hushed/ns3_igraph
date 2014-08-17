@@ -117,6 +117,14 @@ UdpClient::DoDispose (void)
   Application::DoDispose ();
 }
 
+void 
+UdpClient::SetIpTtl(uint16_t ttl)
+{
+    m_ttl = ttl;
+    if (m_socket != 0)
+	m_socket->SetIpTtl(ttl);
+    return ;
+}
 void
 UdpClient::StartApplication (void)
 {
@@ -138,6 +146,7 @@ UdpClient::StartApplication (void)
         }
     }
 
+  m_socket->SetIpTtl(m_ttl);
   m_socket->SetRecvCallback (MakeNullCallback<void, Ptr<Socket> > ());
   m_sendEvent = Simulator::Schedule (Seconds (0.0), &UdpClient::Send, this);
 }

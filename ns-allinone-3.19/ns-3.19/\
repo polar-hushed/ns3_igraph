@@ -20,8 +20,8 @@
  *
  */
 
-#ifndef UDP_CLIENT_H
-#define UDP_CLIENT_H
+#ifndef TRACEROUTE_H
+#define TRACEROUTE_H
 
 #include "ns3/application.h"
 #include "ns3/event-id.h"
@@ -35,12 +35,12 @@ class Packet;
 
 /**
  * \ingroup udpclientserver
- * \class UdpClient
+ * \class TraceRoute
  * \brief A Udp client. Sends UDP packet carrying sequence number and time stamp
  *  in their payloads
  *
  */
-class UdpClient : public Application
+class TraceRoute : public Application
 {
 public:
   /**
@@ -49,9 +49,9 @@ public:
    */
   static TypeId GetTypeId (void);
 
-  UdpClient ();
+  TraceRoute ();
 
-  virtual ~UdpClient ();
+  virtual ~TraceRoute ();
 
   /**
    * \brief set the remote address and port
@@ -72,7 +72,6 @@ public:
    */
   void SetRemote (Address ip, uint16_t port);
 
-  void SetIpTtl(uint16_t);
 protected:
   virtual void DoDispose (void);
 
@@ -85,18 +84,18 @@ private:
    * \brief Send a packet
    */
   void Send (void);
+  void RecvIcmp(void);
 
   uint32_t m_count; //!< Maximum number of packets the application will send
   Time m_interval; //!< Packet inter-send time
   uint32_t m_size; //!< Size of the sent packet (including the SeqTsHeader)
-  uint16_t m_ttl;
 
   uint32_t m_sent; //!< Counter for sent packets
   Ptr<Socket> m_socket; //!< Socket
   Address m_peerAddress; //!< Remote peer address
   uint16_t m_peerPort; //!< Remote peer port
   EventId m_sendEvent; //!< Event to send the next packet
-
+  ptr <UdpL4Protocol> udpL4;
 };
 
 } // namespace ns3
