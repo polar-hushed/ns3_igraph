@@ -30,6 +30,7 @@
 #include "ns3/uinteger.h"
 #include "udp-client.h"
 #include "seq-ts-header.h"
+#include "ns3/icmpv4.h"
 #include <cstdlib>
 #include <cstdio>
 
@@ -79,6 +80,19 @@ UdpClient::UdpClient ()
   m_sent = 0;
   m_socket = 0;
   m_sendEvent = EventId ();
+
+}
+
+void
+UdpClient::ReceivedIcmp (Ipv4Address icmpSource, uint8_t icmpTtl, uint8_t icmpType, uint8_t icmpCode, uint32_t icmpInfo)
+{
+  std::cout << "Got a packet" << std::endl;   
+  {
+	NS_LOG_INFO( "Got ICMP source " << icmpSource <<  " code " << icmpCode << " info " << icmpInfo );
+        SetIpTtl(++m_ttl);
+  }
+
+            
 }
 
 UdpClient::~UdpClient ()
@@ -133,7 +147,9 @@ UdpClient::StartApplication (void)
   if (m_socket == 0)
     {
       TypeId tid = TypeId::LookupByName ("ns3::UdpSocketFactory");
+      
       m_socket = Socket::CreateSocket (GetNode (), tid);
+      
       if (Ipv4Address::IsMatchingType(m_peerAddress) == true)
         {
           m_socket->Bind ();
@@ -148,6 +164,9 @@ UdpClient::StartApplication (void)
 
   m_socket->SetIpTtl(m_ttl);
   m_socket->SetRecvCallback (MakeNullCallback<void, Ptr<Socket> > ());
+  m_udpsocket = m_socket->GetObject<UdpSocketImpl>();
+  if (m_udpsocket != 0)
+  m_udpsocket->SetIcmpCallback (MakeCallback(&UdpClient::ReceivedIcmp, Ptr<UdpClient> (this)));
   m_sendEvent = Simulator::Schedule (Seconds (0.0), &UdpClient::Send, this);
 }
 

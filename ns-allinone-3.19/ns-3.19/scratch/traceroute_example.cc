@@ -27,6 +27,7 @@
 #include "ns3/ipv4-nix-vector-helper.h"
 #include "ns3/queue.h"
 #include "ns3/netanim-module.h"
+#include "ns3/icmpv4.h"
 #include <iostream>
 #include <fstream>
 #include <time.h>
@@ -44,16 +45,35 @@ NS_LOG_COMPONENT_DEFINE ("IGraph");
 int insert_parsed_node(BriteNode* b, std::list<BriteNode*>& bnl);
 int isClient(uint32_t id, NodeContainer c, NodeContainer s);
 
+void
+DevRxTrace (std::string context, Ptr<const Packet> p)
+{
+/*  std::cout << "Got a packet" << std::endl;   
+  std::cout << context << std::endl;   
+  Ptr<Packet> copy = p->Copy();
+  Icmpv4Header icmp;
+  std::string node = context.substr(10,context.find('D')-1);
+  copy->PeekHeader(icmp);
+  {
+	std::cout << "Got ICMP " << icmp.GetCode() << " type " << icmp.GetType()  << std::endl;
+       if (icmp.GetType() == 'E')
+	{
+	std::cout << "Got ICMP " << std::endl;
+        }
+  }
+*/
+}
+
 int
 main (int argc, char *argv[])
 {
   //NS_LOG_FUNCTION (this);
 
-  double SimTime        = 11.00;
+  double SimTime        = 201.00;
   //double SinkStartTime  = 1.0001;
   //double SinkStopTime   = 9.90001;
   double AppStartTime   = 2.0001;
-  double AppStopTime    = 8.80001;
+  double AppStopTime    = 200.80001;
 
   std::string exampleRunID;
   exampleRunID = "RTBarabasi-2AS-10LeafNodes-9Clients-1Server-20Nodes";
@@ -215,15 +235,12 @@ main (int argc, char *argv[])
       apps_sink.Stop (Seconds (SinkStopTime));
   }*/
   uint16_t port = 4000;
-  UdpServerHelper udps (port);
  
     unsigned int i = 0; 
       for (unsigned int j = 0; j < server.GetN(); j++)
         {
 
 
-		UdpClientHelper apps ()
-			= udps.Install (client.Get (i));
               // We needed to generate a random number (rn) to be used to eliminate
               // the artificial congestion caused by sending the packets at the
               // same time. This rn is added to AppStartTime to have the sources
@@ -233,34 +250,37 @@ main (int argc, char *argv[])
               x->SetAttribute ("Min", DoubleValue (0));
               x->SetAttribute ("Max", DoubleValue (1));
               double rn = x->GetValue ();
-              Ptr<Node> c = client.Get(i);
 	     std::cout << "client address " << i << "is " <<  clientInterfaces.GetAddress(i) << std::endl;
               UdpServerHelper udps  (
 				port
 				); // traffic flows from node[j] to node[i]
 
 	      ApplicationContainer apps ;
+	      ApplicationContainer appc ;
 
               apps = udps.Install (server.Get (j));  // traffic sources are installed on all nodes
               uint32_t MaxPacketSize = 1024;
-              Time interPacketInterval = Seconds (0.05);
+              Time interPacketInterval = Seconds (5);
               uint32_t maxPacketCount = 320;
-              UdpClientHelper appc (serverAddress, port);
-  client.SetAttribute ("MaxPackets", UintegerValue (maxPacketCount));
-  client.SetAttribute ("Interval", TimeValue (interPacketInterval));
-  client.SetAttribute ("PacketSize", UintegerValue (MaxPacketSize));
-  apps = client.Install (n.Get (0));
-  a
-
+              UdpClientHelper udpc = UdpClientHelper(serverInterfaces.GetAddress(j), port);
+	      udpc.SetAttribute ("MaxPackets", UintegerValue (maxPacketCount));
+	      udpc.SetAttribute ("Interval", TimeValue (interPacketInterval));
+	      udpc.SetAttribute ("PacketSize", UintegerValue (MaxPacketSize));
+	      appc = udpc.Install (client.Get (i));
+	
+	      Ptr<UdpClient> c = udpc.GetClient();
+              c->SetIpTtl(1);
 
               apps.Start (Seconds (AppStartTime + rn));
+              appc.Start (Seconds (AppStartTime + rn));
               apps.Stop (Seconds (AppStopTime));
+              appc.Stop (Seconds (AppStopTime));
 	      ++i;
 	      if (i >= client.GetN())
 		break; 
             }
 
-
+	Config::Connect("/NodeList/*/DeviceList/*/$ns3::PointToPointNetDevice/MacRx",MakeCallback(&DevRxTrace));
 	std::list<brite::Edge*> el = bth.GetBriteEdgeList();
 	std::list<brite::BriteNode*> bnl ;
 	NS_LOG_INFO("Preparing to make stats ");
@@ -315,7 +335,7 @@ main (int argc, char *argv[])
   if (tracing)
     {
       AsciiTraceHelper ascii;
-      p2p.EnableAsciiAll (ascii.CreateFileStream ("briteLeaves.tr"));
+      p2p.EnableAsciiAll (ascii.CreateFileStream ("brite.tr"));
     }
 
   if (pcap_tracing)
