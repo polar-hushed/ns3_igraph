@@ -1,5 +1,7 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
+ * Copyright (c) 2007,2008,2009 INRIA, UDCAST
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation;
@@ -12,33 +14,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * Author: Amine Ismail <amine.ismail@sophia.inria.fr>
+ *                      <amine.ismail@udcast.com>
+ *
  */
 
-#ifndef TRACEROUTE_H
-#define TRACEROUTE_H
+#ifndef UDP_CLIENT_H
+#define UDP_CLIENT_H
 
 #include "ns3/application.h"
-#include "ns3/traced-callback.h"
-#include "ns3/nstime.h"
-#include "ns3/average.h"
-#include "ns3/simulator.h"
-#include <map>
+#include "ns3/event-id.h"
+#include "ns3/ptr.h"
+#include "ns3/ipv4-address.h"
+#include "ns3/udp-socket-impl.h"
 
 namespace ns3 {
 
 class Socket;
+class Packet;
 
 /**
- * \ingroup applications
- * \defgroup traceroute
- */
-
-/**
- * \ingroup traceroute
- * \brief an application which sends one ICMP ECHO request, waits for a REPLYs
- *        and reports the calculated RTT.
+ * \ingroup udpclientserver
+ * \class TraceRoute
+ * \brief A Udp client. Sends UDP packet carrying sequence number and time stamp
+ *  in their payloads
  *
- * Note: The RTT calculated is reported through a trace source.
  */
 class TraceRoute : public Application
 {
@@ -49,81 +50,62 @@ public:
    */
   static TypeId GetTypeId (void);
 
-  /**
-   * create a traceroute applications
-   */
   TraceRoute ();
+
   virtual ~TraceRoute ();
 
-private:
   /**
-   * \brief Writes data to buffer in little-endian format.
-   *
-   * Least significant byte of data is at lowest buffer address
-   *
-   * \param buffer the buffer to write to
-   * \param data the data to write
+   * \brief set the remote address and port
+   * \param ip remote IPv4 address
+   * \param port remote port
    */
-  void Write32 (uint8_t *buffer, const uint32_t data);
+  void SetRemote (Ipv4Address ip, uint16_t port);
   /**
-   * \brief Writes data from a little-endian formatted buffer to data.
-   *
-   * \param buffer the buffer to read from
-   * \param data the read data
+   * \brief set the remote address and port
+   * \param ip remote IPv6 address
+   * \param port remote port
    */
-  void Read32 (const uint8_t *buffer, uint32_t &data);
+  void SetRemote (Ipv6Address ip, uint16_t port);
+  /**
+   * \brief set the remote address and port
+   * \param ip remote IP address
+   * \param port remote port
+   */
+  void SetRemote (Address ip, uint16_t port);
 
-  // inherited from Application base class.
+  void SetIpTtl(uint16_t);
+
+protected:
+  virtual void DoDispose (void);
+
+private:
+
   virtual void StartApplication (void);
   virtual void StopApplication (void);
-  virtual void DoDispose (void);
-  /**
-   * \brief Return the application ID in the node.
-   * \returns the application id
-   */
-  uint32_t GetApplicationId (void) const;
-  /**
-   * \brief Receive an ICMP Echo
-   * \param socket the receiving socket
-   *
-   * This function is called by lower layers through a callback.
-   */
-  void Receive (Ptr<Socket> socket);
-  /**
-   * \brief Send on TraceRoute (ICMP) to the destination
-   */
-  void Send ();
 
-  /// Remote address
-  Ipv4Address m_remote;
-  /// Wait  interval  seconds between sending each packet
-  Time m_interval;
-  /** 
-   * Specifies  the number of data bytes to be sent. 
-   * The default is 56, which translates into 64 ICMP data bytes when combined with the 8 bytes of ICMP header data.
+ void
+ReceivedIcmp (Ipv4Address icmpSource, uint8_t icmpTtl, uint8_t icmpType, uint8_t icmpCode, uint32_t icmpInfo);
+  /**
+   * \brief Send a packet
    */
-  uint32_t m_size;
-  /// The socket we send packets from
-  Ptr<Socket> m_socket;
-  /// ICMP ECHO sequence number
-  uint16_t m_seq;
-  /// TracedCallback for RTT measured by ICMP ECHOs
-  TracedCallback<Time> m_traceRtt;
-  /// produce traceroute-style output if true
-  bool m_verbose;
-  /// received packets counter
-  uint32_t m_recv;
-  /// Start time to report total traceroute time
-  Time m_started;
-  /// Average rtt is ms
-  Average<double> m_avgRtt;
-  /// Next packet will be sent
-  EventId m_next;
-  /// All sent but not answered packets. Map icmp seqno -> when sent
-  std::map<uint16_t, Time> m_sent;
+  void Send (void);
+
+
+
+  uint32_t m_count; //!< Maximum number of packets the application will send
+  Time m_interval; //!< Packet inter-send time
+  uint32_t m_size; //!< Size of the sent packet (including the SeqTsHeader)
   uint16_t m_ttl;
+
+  uint32_t m_sent; //!< Counter for sent packets
+  Ptr<Socket> m_socket; //!< Socket
+  Ptr<UdpSocketImpl> m_udpsocket; //!< Socket
+  Address m_peerAddress; //!< Remote peer address
+  uint16_t m_peerPort; //!< Remote peer port
+  EventId m_sendEvent; //!< Event to send the next packet
+
 };
 
 } // namespace ns3
 
-#endif /* V4PING_H */
+#endif /* UDP_CLIENT_H */

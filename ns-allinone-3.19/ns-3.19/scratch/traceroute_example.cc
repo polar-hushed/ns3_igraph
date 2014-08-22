@@ -213,15 +213,15 @@ main (int argc, char *argv[])
   p2p.SetChannelAttribute ("Delay", StringValue (LinkDelay));
 
 
-              NetDeviceContainer clientDev = p2p.Install(client);
-	      address.SetBase ("10.1.0.0", "255.255.0.0");
-              Ipv4InterfaceContainer clientInterfaces;
-              clientInterfaces = address.Assign (clientDev);
+  NetDeviceContainer clientDev = p2p.Install(client);
+  address.SetBase ("10.1.0.0", "255.255.0.0");
+  Ipv4InterfaceContainer clientInterfaces;
+  clientInterfaces = address.Assign (clientDev);
 
-              NetDeviceContainer serverDev = p2p.Install(server);
-	      address.SetBase ("10.2.0.0", "255.255.0.0");
-              Ipv4InterfaceContainer serverInterfaces;
-              serverInterfaces = address.Assign (serverDev);
+  NetDeviceContainer serverDev = p2p.Install(server);
+  address.SetBase ("10.2.0.0", "255.255.0.0");
+  Ipv4InterfaceContainer serverInterfaces;
+  serverInterfaces = address.Assign (serverDev);
   if (!nix)
   {
      Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
@@ -251,29 +251,29 @@ main (int argc, char *argv[])
               x->SetAttribute ("Max", DoubleValue (1));
               double rn = x->GetValue ();
 	     std::cout << "client address " << i << "is " <<  clientInterfaces.GetAddress(i) << std::endl;
-              UdpServerHelper udps  (
+              /*UdpServerHelper udps  (
 				port
 				); // traffic flows from node[j] to node[i]
 
-	      ApplicationContainer apps ;
+	      ApplicationContainer apps ;*/
 	      ApplicationContainer appc ;
 
-              apps = udps.Install (server.Get (j));  // traffic sources are installed on all nodes
+             // apps = udps.Install (server.Get (j));  // traffic sources are installed on all nodes
               uint32_t MaxPacketSize = 1024;
               Time interPacketInterval = Seconds (5);
               uint32_t maxPacketCount = 320;
-              UdpClientHelper udpc = UdpClientHelper(serverInterfaces.GetAddress(j), port);
+              TraceRouteHelper udpc = TraceRouteHelper(serverInterfaces.GetAddress(j), port);
 	      udpc.SetAttribute ("MaxPackets", UintegerValue (maxPacketCount));
 	      udpc.SetAttribute ("Interval", TimeValue (interPacketInterval));
 	      udpc.SetAttribute ("PacketSize", UintegerValue (MaxPacketSize));
 	      appc = udpc.Install (client.Get (i));
 	
-	      Ptr<UdpClient> c = udpc.GetClient();
+	      Ptr<TraceRoute> c = udpc.GetClient();
               c->SetIpTtl(1);
 
-              apps.Start (Seconds (AppStartTime + rn));
+             // apps.Start (Seconds (AppStartTime + rn));
               appc.Start (Seconds (AppStartTime + rn));
-              apps.Stop (Seconds (AppStopTime));
+             // apps.Stop (Seconds (AppStopTime));
               appc.Stop (Seconds (AppStopTime));
 	      ++i;
 	      if (i >= client.GetN())

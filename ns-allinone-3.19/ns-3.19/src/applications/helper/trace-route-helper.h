@@ -15,84 +15,103 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Author: Mathieu Lacage <mathieu.lacage@sophia.inria.fr>
+ * Author: Mohamed Amine Ismail <amine.ismail@sophia.inria.fr>
  */
+#ifndef UDP_CLIENT_SERVER_HELPER_H
+#define UDP_CLIENT_SERVER_HELPER_H
 
-#ifndef TRACEROUTE_HELPER_H
-#define TRACEROUTE_HELPER_H
-
-#include "ns3/node-container.h"
+#include <stdint.h>
 #include "ns3/application-container.h"
+#include "ns3/node-container.h"
 #include "ns3/object-factory.h"
-
+#include "ns3/ipv4-address.h"
+#include "ns3/trace-route.h"
 namespace ns3 {
-
 /**
- * \ingroup TraceRoute
- * \brief Create a IPv5 TraceRoute application and associate it to a node
+ * \ingroup udpclientserver
+ * \brief Create a server application which waits for input UDP packets
+ *        and uses the information carried into their payload to compute
+ *        delay and to determine if some packets are lost.
+ */
+/**
+ * \ingroup udpclientserver
+ * \brief Create a client application which sends UDP packets carrying
+ *  a 32bit sequence number and a 64 bit time stamp.
  *
- * This class creates one or multiple instances of ns3::TraceRoute and associates
- * it/them to one/multiple node(s).
  */
 class TraceRouteHelper
 {
+
 public:
   /**
-   * Create a TraceRouteHelper which is used to make life easier for people wanting
-   * to use TraceRoute Applications.
+   * Create TraceRouteHelper which will make life easier for people trying
+   * to set up simulations with udp-client-server.
    *
-   * \param remote The address which should be TraceRouteed
    */
-  TraceRouteHelper (Ipv4Address remote);
+  TraceRouteHelper ();
 
   /**
-   * Install a Ping application on each Node in the provided NodeContainer.
+   *  Create TraceRouteHelper which will make life easier for people trying
+   * to set up simulations with udp-client-server.
    *
-   * \param nodes The NodeContainer containing all of the nodes to get a TraceRoute
-   *              application.
-   *
-   * \returns A list of Ping applications, one for each input node
+   * \param ip The IPv4 address of the remote UDP server
+   * \param port The port number of the remote UDP server
    */
-  ApplicationContainer Install (NodeContainer nodes) const;
+
+  TraceRouteHelper (Ipv4Address ip, uint16_t port);
+  /**
+   *  Create TraceRouteHelper which will make life easier for people trying
+   * to set up simulations with udp-client-server.
+   *
+   * \param ip The IPv6 address of the remote UDP server
+   * \param port The port number of the remote UDP server
+   */
+
+  TraceRouteHelper (Ipv6Address ip, uint16_t port);
+  /**
+   *  Create TraceRouteHelper which will make life easier for people trying
+   * to set up simulations with udp-client-server.
+   *
+   * \param ip The IP address of the remote UDP server
+   * \param port The port number of the remote UDP server
+   */
+
+  TraceRouteHelper (Address ip, uint16_t port);
 
   /**
-   * Install a Ping application on the provided Node.  The Node is specified
-   * directly by a Ptr<Node>
+   * Record an attribute to be set in each Application after it is is created.
    *
-   * \param node The node to install the TraceRouteApplication on.
-   *
-   * \returns An ApplicationContainer holding the Ping application created.
-   */
-  ApplicationContainer Install (Ptr<Node> node) const;
-
-  /**
-   * Install a Ping application on the provided Node.  The Node is specified
-   * by a string that must have previously been associated with a Node using the
-   * Object Name Service.
-   *
-   * \param nodeName The node to install the TraceRouteApplication on.
-   *
-   * \returns An ApplicationContainer holding the Ping application created.
-   */
-  ApplicationContainer Install (std::string nodeName) const;
-
-  /**
-   * \brief Configure TraceRoute applications attribute 
-   * \param name   attribute's name
-   * \param value  attribute's value
+   * \param name the name of the attribute to set
+   * \param value the value of the attribute to set
    */
   void SetAttribute (std::string name, const AttributeValue &value);
-private:
-  /**
-   * \brief Do the actual application installation in the node
-   * \param node the node
-   * \returns a Smart pointer to the installed application
-   */
-  Ptr<Application> InstallPriv (Ptr<Node> node) const;
-  /// Object factory
-  ObjectFactory m_factory;
-};
 
+  /**
+     * \param c the nodes
+     *
+     * Create one UDP client application on each of the input nodes
+     *
+     * \returns the applications created, one application per input node.
+     */
+  ApplicationContainer Install (NodeContainer c);
+  Ptr<TraceRoute> GetClient (void);
+
+private:
+  ObjectFactory m_factory; //!< Object factory.
+  Ptr<TraceRoute> m_client; //!< The last created server application
+};
+/**
+ * \ingroup udpclientserver
+ * Create UdpTraceClient application which sends UDP packets based on a trace
+ * file of an MPEG4 stream. Trace files could be downloaded form :
+ * http://www2.tkn.tu-berlin.de/research/trace/ltvt.html (the 2 first lines of
+ * the file should be removed)
+ * A valid trace file is a file with 4 columns:
+ * \li -1- the first one represents the frame index
+ * \li -2- the second one indicates the type of the frame: I, P or B
+ * \li -3- the third one indicates the time on which the frame was generated by the encoder
+ * \li -4- the fourth one indicates the frame size in byte
+*/
 } // namespace ns3
 
-#endif /* V4PING_HELPER_H */
+#endif /* UDP_CLIENT_SERVER_H */
