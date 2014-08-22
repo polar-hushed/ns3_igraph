@@ -1,6 +1,6 @@
-# project ns (3.19) configured on Fri Jul  4 23:19:36 2014 by
+# project ns (3.19) configured on Fri Aug 22 12:24:16 2014 by
 # waf 1.7.13 (abi 98, python 20608f0 on linux2)
-# using ./waf configure --with-brite=BRITE/
+# using ./waf configure
 #
 ----------------------------------------
 Setting top to
@@ -10,15 +10,15 @@ Setting out to
 /home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/build
 ----------------------------------------
 Checking for 'gcc' (c compiler)
-find program=['gcc', 'cc'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='CC' -> '/usr/bin/gcc'
-find program=['ar'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='AR' -> '/usr/bin/ar'
+find program=['gcc', 'cc'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='CC' -> '/usr/bin/gcc'
+find program=['ar'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='AR' -> '/usr/bin/ar'
 /usr/bin/gcc
 ----------------------------------------
 Checking for cc version
 4.3.4
 ----------------------------------------
 Checking for 'g++' (c++ compiler)
-find program=['g++', 'c++'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='CXX' -> '/usr/bin/g++'
+find program=['g++', 'c++'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='CXX' -> '/usr/bin/g++'
 (tool ar is already loaded, skipping)
 /usr/bin/g++
 ---------------------------------------------------------
@@ -38,7 +38,7 @@ ok
 ---------------------------------------------------------
 Checking for program python
 /usr/bin/python
-find program=['python'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='PYTHON' -> '/usr/bin/python'
+find program=['python'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='PYTHON' -> '/usr/bin/python'
 ['/usr/bin/python', '-c', 'import sys\nfor x in sys.version_info: print(str(x))']
 out: 2
 6
@@ -109,7 +109,7 @@ yes
 ------------------------------------------------------------------------------------------------
 Checking for program /usr/bin/python-config,python2.6-config,python-config-2.6,python2.6m-config
 /usr/bin/python-config
-find program=['/usr/bin/python-config', 'python2.6-config', 'python-config-2.6', 'python2.6m-config'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='PYTHON_CONFIG' -> '/usr/bin/python-config'
+find program=['/usr/bin/python-config', 'python2.6-config', 'python-config-2.6', 'python2.6m-config'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='PYTHON_CONFIG' -> '/usr/bin/python-config'
 ['/usr/bin/python-config', '--includes']
 out: -I/usr/include/python2.6 -I/usr/include/python2.6
 
@@ -316,51 +316,12 @@ int main() { boost::system::error_code c; }
 ['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/build/.conf_check_968fbcee789046a8c143bb4a6e302895/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/usr/lib64', '-lboost_system-mt', '-lboost_signals-mt', '-lboost_filesystem-mt']
 ok
 ------------------------------------------------------------------------------------------------
-Checking BRITE location
-BRITE/ (given)
-------------------------------------------------------------------------------------------------
-Checking for library dl
-==>
-
-int main(int argc, char **argv) {
-	(void)argc; (void)argv;
-	return 0;
-}
-
-<==
-[1/2] [32mcxx: build/.conf_check_a5f90842652328bf1e94d3e4cca69445/test.cpp -> build/.conf_check_a5f90842652328bf1e94d3e4cca69445/testbuild/test.cpp.1.o
-[0m
-['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib64/python2.6/site-packages"', '-DPYTHONARCHDIR="/usr/local/lib64/python2.6/site-packages"', '-DHAVE_PYTHON_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
-[2/2] [33mcxxprogram: build/.conf_check_a5f90842652328bf1e94d3e4cca69445/testbuild/test.cpp.1.o -> build/.conf_check_a5f90842652328bf1e94d3e4cca69445/testbuild/testprog
-[0m
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/build/.conf_check_a5f90842652328bf1e94d3e4cca69445/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-ldl']
-yes
-------------------------------------------------------------------------------------------------
-Checking for library brite
-==>
-
-#include "Brite.h"
-
-int main()
-{
-  return 0;
-}
-
-<==
-[1/2] [32mcxx: build/.conf_check_ec6234ab206e09caebc4e28d11ef6268/test.cpp -> build/.conf_check_ec6234ab206e09caebc4e28d11ef6268/testbuild/test.cpp.1.o
-[0m
-['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-I/home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/BRITE', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DPYTHONDIR="/usr/local/lib64/python2.6/site-packages"', '-DPYTHONARCHDIR="/usr/local/lib64/python2.6/site-packages"', '-DHAVE_PYTHON_H=1', '-DDL=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
-[2/2] [33mcxxprogram: build/.conf_check_ec6234ab206e09caebc4e28d11ef6268/testbuild/test.cpp.1.o -> build/.conf_check_ec6234ab206e09caebc4e28d11ef6268/testbuild/testprog
-[0m
-['/usr/bin/g++', 'test.cpp.1.o', '-o', '/home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/build/.conf_check_ec6234ab206e09caebc4e28d11ef6268/testbuild/testprog', '-Wl,-Bstatic', '-Wl,-Bdynamic', '-L/home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/BRITE', '-L/home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/BRITE', '-lbrite', '-ldl']
-yes
-------------------------------------------------------------------------------------------------
 Checking for click location
 not found
 ------------------------------------------------------------------------------------------------
 Checking for program pkg-config
 /usr/bin/pkg-config
-find program=['pkg-config'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='PKGCONFIG' -> '/usr/bin/pkg-config'
+find program=['pkg-config'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='PKGCONFIG' -> '/usr/bin/pkg-config'
 ------------------------------------------------------------------------------------------------
 Checking for 'gtk+-2.0' >= 2.12
 ['/usr/bin/pkg-config', '--atleast-version=2.12', 'gtk+-2.0']
@@ -400,7 +361,7 @@ from /home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/src/core: 
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 11919440: cxx test.cpp -> test.cpp.1.o}
+	{task 12180880: cxx test.cpp -> test.cpp.1.o}
 ['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
 
 not found
@@ -487,7 +448,7 @@ from /home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/src/core: 
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 11921936: cxx test.cpp -> test.cpp.1.o}
+	{task 12169616: cxx test.cpp -> test.cpp.1.o}
 ['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
 
 not found
@@ -661,7 +622,7 @@ from /home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19/src/core: 
     raise Errors.BuildError(self.producer.error)
 BuildError: Build failed
  -> task in 'testprog' failed (exit status 1): 
-	{task 11908304: cxx test.cpp -> test.cpp.1.o}
+	{task 12234512: cxx test.cpp -> test.cpp.1.o}
 ['/usr/bin/g++', '-O0', '-ggdb', '-g3', '-Wall', '-Werror', '-DNS3_ASSERT_ENABLE', '-DNS3_LOG_ENABLE', '-DHAVE___UINT128_T=1', '-DINT64X64_USE_128=1', '-DHAVE_SYS_TYPES_H=1', '-DHAVE_SYS_STAT_H=1', '-DHAVE_DIRENT_H=1', '-DHAVE_STDLIB_H=1', '-DHAVE_GETENV=1', '-DHAVE_SIGNAL_H=1', '-DHAVE_PTHREAD_H=1', '-DHAVE_STDINT_H=1', '-DHAVE_INTTYPES_H=1', '../test.cpp', '-c', '-o', 'test.cpp.1.o']
 
 not found
@@ -824,11 +785,11 @@ yes
 ------------------------------------------------------------------------------------------------
 Checking for program sudo
 /usr/bin/sudo
-find program=['sudo'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='SUDO' -> '/usr/bin/sudo'
+find program=['sudo'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='SUDO' -> '/usr/bin/sudo'
 ------------------------------------------------------------------------------------------------
 Checking for program valgrind
 not found
-find program=['valgrind'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='VALGRIND' -> ''
+find program=['valgrind'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='VALGRIND' -> ''
 from /home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19: Could not find the program valgrind
 ------------------------------------------------------------------------------------------------
 Checking for 'gsl'
@@ -927,5 +888,5 @@ ok
 ------------------------------------------------------------------------------------------------
 Checking for program doxygen
 not found
-find program=['doxygen'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/home/shweta.jain/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/cuda/5.0/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64'] var='DOXYGEN' -> ''
+find program=['doxygen'] paths=['/share/apps/openmpi-intel/1.6.4/bin', '/usr/lib64/jvm/jre-1.6.0-ibm/bin', '/opt/sgi/mpt/mpt-2.02/bin', '/usr/local/bin', '/usr/bin', '/bin', '/usr/bin/X11', '/usr/X11R6/bin', '/usr/games', '/opt/c3/bin', '/usr/lib/mit/bin', '/usr/lib/mit/sbin', '.', '/opt/sgi/sbin', '/opt/sgi/bin', '/share/apps/pbs/12.2.0.133411/bin', '/share/apps/intel/composer_xe_2013.1.117/bin/intel64', '/share/apps/intel/composer_xe_2013.1.117/mpirt/bin/intel64', '/share/apps/cuda/5.0/bin'] var='DOXYGEN' -> ''
 from /home/shweta.jain/ns3_igraph/ns3_igraph/ns-allinone-3.19/ns-3.19: Could not find the program doxygen

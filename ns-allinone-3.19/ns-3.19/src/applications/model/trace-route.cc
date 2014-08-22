@@ -1,5 +1,7 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
+ * Copyright (c) 2007,2008,2009 INRIA, UDCAST
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation;
@@ -12,19 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * Author: Amine Ismail <amine.ismail@sophia.inria.fr>
+ *                      <amine.ismail@udcast.com>
  */
-
-#include "trace-route.h"
-#include "ns3/icmpv4.h"
-#include "ns3/assert.h"
 #include "ns3/log.h"
 #include "ns3/ipv4-address.h"
-#include "ns3/socket.h"
-#include "ns3/uinteger.h"
-#include "ns3/boolean.h"
+#include "ns3/nstime.h"
 #include "ns3/inet-socket-address.h"
+#include "ns3/inet6-socket-address.h"
+#include "ns3/socket.h"
+#include "ns3/simulator.h"
+#include "ns3/socket-factory.h"
 #include "ns3/packet.h"
-#include "ns3/trace-source-accessor.h"
+#include "ns3/uinteger.h"
+#include "trace-route.h"
+#include "seq-ts-header.h"
+#include "ns3/icmpv4.h"
+#include <cstdlib>
+#include <cstdio>
 
 namespace ns3 {
 
@@ -33,259 +41,185 @@ NS_LOG_COMPONENT_DEFINE ("TraceRoute")
 NS_OBJECT_ENSURE_REGISTERED (TraceRoute)
   ;
 
-TypeId 
+TypeId
 TraceRoute::GetTypeId (void)
 {
   static TypeId tid = TypeId ("ns3::TraceRoute")
     .SetParent<Application> ()
     .AddConstructor<TraceRoute> ()
-    .AddAttribute ("Remote", 
-                   "The address of the machine we want to traceroute.",
-                   Ipv4AddressValue (),
-                   MakeIpv4AddressAccessor (&TraceRoute::m_remote),
-                   MakeIpv4AddressChecker ())
-    .AddAttribute ("Verbose",
-                   "Produce usual output.",
-                   BooleanValue (false),
-                   MakeBooleanAccessor (&TraceRoute::m_verbose),
-                   MakeBooleanChecker ())
-    .AddAttribute ("Interval", "Wait  interval  seconds between sending each packet.",
-                   TimeValue (Seconds (1)),
+    .AddAttribute ("MaxPackets",
+                   "The maximum number of packets the application will send",
+                   UintegerValue (100),
+                   MakeUintegerAccessor (&TraceRoute::m_count),
+                   MakeUintegerChecker<uint32_t> ())
+    .AddAttribute ("Interval",
+                   "The time to wait between packets", TimeValue (Seconds (1.0)),
                    MakeTimeAccessor (&TraceRoute::m_interval),
                    MakeTimeChecker ())
-    .AddAttribute ("Size", "The number of data bytes to be sent, real packet will be 8 (ICMP) + 20 (IP) bytes longer.",
-                   UintegerValue (56),
+    .AddAttribute ("RemoteAddress",
+                   "The destination Address of the outbound packets",
+                   AddressValue (),
+                   MakeAddressAccessor (&TraceRoute::m_peerAddress),
+                   MakeAddressChecker ())
+    .AddAttribute ("RemotePort", "The destination port of the outbound packets",
+                   UintegerValue (100),
+                   MakeUintegerAccessor (&TraceRoute::m_peerPort),
+                   MakeUintegerChecker<uint16_t> ())
+    .AddAttribute ("PacketSize",
+                   "Size of packets generated. The minimum packet size is 12 bytes which is the size of the header carrying the sequence number and the time stamp.",
+                   UintegerValue (1024),
                    MakeUintegerAccessor (&TraceRoute::m_size),
-                   MakeUintegerChecker<uint32_t> (16))
-    .AddTraceSource ("Rtt",
-                     "The rtt calculated by the traceroute.",
-                     MakeTraceSourceAccessor (&TraceRoute::m_traceRtt));
+                   MakeUintegerChecker<uint32_t> (12,1500))
   ;
   return tid;
 }
 
 TraceRoute::TraceRoute ()
-  : m_interval (Seconds (1)),
-    m_size (56),
-    m_socket (0),
-    m_seq (0),
-    m_verbose (false),
-    m_recv (0)
 {
   NS_LOG_FUNCTION (this);
+  m_sent = 0;
+  m_socket = 0;
+  m_sendEvent = EventId ();
+
 }
+
+void
+TraceRoute::ReceivedIcmp (Ipv4Address icmpSource, uint8_t icmpTtl, uint8_t icmpType, uint8_t icmpCode, uint32_t icmpInfo)
+{
+  {
+	NS_LOG_INFO( GetNode()->GetId() <<  " Got ICMP source " << icmpSource <<  " code " << (int) icmpCode << " info " << (int) icmpInfo << " TTL " << (int)icmpTtl << " Type " << (int)icmpType);
+        SetIpTtl(++m_ttl);
+  }
+    if ((int)icmpType == 11)
+      m_sendEvent = Simulator::Schedule (Seconds(0.0), &TraceRoute::Send, this);
+    else
+	m_ttl=1; 
+}
+
 TraceRoute::~TraceRoute ()
 {
   NS_LOG_FUNCTION (this);
 }
 
 void
+TraceRoute::SetRemote (Ipv4Address ip, uint16_t port)
+{
+  NS_LOG_FUNCTION (this << ip << port);
+  m_peerAddress = Address(ip);
+  m_peerPort = port;
+}
+
+void
+TraceRoute::SetRemote (Ipv6Address ip, uint16_t port)
+{
+  NS_LOG_FUNCTION (this << ip << port);
+  m_peerAddress = Address(ip);
+  m_peerPort = port;
+}
+
+void
+TraceRoute::SetRemote (Address ip, uint16_t port)
+{
+  NS_LOG_FUNCTION (this << ip << port);
+  m_peerAddress = ip;
+  m_peerPort = port;
+}
+
+void
 TraceRoute::DoDispose (void)
 {
   NS_LOG_FUNCTION (this);
-  m_socket = 0;
   Application::DoDispose ();
 }
 
-uint32_t
-TraceRoute::GetApplicationId (void) const
-{
-  NS_LOG_FUNCTION (this);
-  Ptr<Node> node = GetNode ();
-  for (uint32_t i = 0; i < node->GetNApplications (); ++i)
-    {
-      if (node->GetApplication (i) == this)
-        {
-          return i;
-        }
-    }
-  NS_ASSERT_MSG (false, "forgot to add application to node");
-  return 0; // quiet compiler
-}
-
-void
-TraceRoute::Receive (Ptr<Socket> socket)
-{
-  NS_LOG_FUNCTION (this << socket);
-  while (m_socket->GetRxAvailable () > 0)
-    {
-      Address from;
-      Ptr<Packet> p = m_socket->RecvFrom (0xffffffff, 0, from);
-      NS_LOG_DEBUG ("recv " << p->GetSize () << " bytes");
-      NS_ASSERT (InetSocketAddress::IsMatchingType (from));
-      InetSocketAddress realFrom = InetSocketAddress::ConvertFrom (from);
-      NS_ASSERT (realFrom.GetPort () == 1); // protocol should be icmp.
-      Ipv4Header ipv4;
-      p->RemoveHeader (ipv4);
-      uint32_t recvSize = p->GetSize ();
-      NS_ASSERT (ipv4.GetProtocol () == 1); // protocol should be icmp.
-      Icmpv4Header icmp;
-      p->RemoveHeader (icmp);
-      if (icmp.GetType () == Icmpv4Header::ECHO_REPLY)
-        {
-          Icmpv4Echo echo;
-          p->RemoveHeader (echo);
-          std::map<uint16_t, Time>::iterator i = m_sent.find (echo.GetSequenceNumber ());
-
-          if (i != m_sent.end () && echo.GetIdentifier () == 0)
-            {
-              uint32_t * buf = new uint32_t [m_size];
-              uint32_t dataSize = echo.GetDataSize ();
-              uint32_t nodeId;
-              uint32_t appId;
-              if (dataSize == m_size)
-                {
-                  echo.GetData ((uint8_t *)buf);
-                  Read32 ((const uint8_t *) &buf[0], nodeId);
-                  Read32 ((const uint8_t *) &buf[1], appId);
-
-                  if (nodeId == GetNode ()->GetId () &&
-                      appId == GetApplicationId ())
-                    {
-                      Time sendTime = i->second;
-                      NS_ASSERT (Simulator::Now () >= sendTime);
-                      Time delta = Simulator::Now () - sendTime;
-
-                      m_sent.erase (i);
-                      m_avgRtt.Update (delta.GetMilliSeconds ());
-                      m_recv++;
-                      m_traceRtt (delta);
-
-                      if (m_verbose)
-                        {
-                          std::cout << recvSize << " bytes from " << realFrom.GetIpv4 () << ":"
-                                    << " icmp_seq=" << echo.GetSequenceNumber ()
-                                    << " ttl=" << (unsigned)ipv4.GetTtl ()
-                                    << " time=" << delta.GetMilliSeconds () << " ms\n";
-                        }
-                    }
-                }
-              delete[] buf;
-            }
-        }
-
-      else if (icmp.GetType () == Icmpv4Header::TIME_EXCEEDED)
-      {
-		++m_ttl;
-		Send();
-      }
-    }
-}
-
-// Writes data to buffer in little-endian format; least significant byte
-// of data is at lowest buffer address
-void
-TraceRoute::Write32 (uint8_t *buffer, const uint32_t data)
-{
-  NS_LOG_FUNCTION (this << buffer << data);
-  buffer[0] = (data >> 0) & 0xff;
-  buffer[1] = (data >> 8) & 0xff;
-  buffer[2] = (data >> 16) & 0xff;
-  buffer[3] = (data >> 24) & 0xff;
-}
-
-// Writes data from a little-endian formatted buffer to data
-void
-TraceRoute::Read32 (const uint8_t *buffer, uint32_t &data)
-{
-  NS_LOG_FUNCTION (this << buffer << data);
-  data = (buffer[3] << 24) + (buffer[2] << 16) + (buffer[1] << 8) + buffer[0];
-}
-
 void 
-TraceRoute::Send ()
+TraceRoute::SetIpTtl(uint16_t ttl)
 {
-  NS_LOG_FUNCTION (this);
-
-  NS_LOG_INFO ("m_seq=" << m_seq);
-  Ptr<Packet> p = Create<Packet> ();
-  Icmpv4Echo echo;
-  echo.SetSequenceNumber (m_seq);
-  m_seq++;
-  echo.SetIdentifier (0);
-
-  //
-  // We must write quantities out in some form of network order.  Since there
-  // isn't an htonl to work with we just follow the convention in pcap traces
-  // (where any difference would show up anyway) and borrow that code.  Don't
-  // be too surprised when you see that this is a little endian convention.
-  //
-  uint8_t* data = new uint8_t[m_size];
-  for (uint32_t i = 0; i < m_size; ++i) data[i] = 0;
-  NS_ASSERT (m_size >= 16);
-
-  uint32_t tmp = GetNode ()->GetId ();
-  Write32 (&data[0 * sizeof(uint32_t)], tmp);
-
-  tmp = GetApplicationId ();
-  Write32 (&data[1 * sizeof(uint32_t)], tmp);
-
-  Ptr<Packet> dataPacket = Create<Packet> ((uint8_t *) data, m_size);
-  echo.SetData (dataPacket);
-  p->AddHeader (echo);
-  Icmpv4Header header;
-  header.SetType (Icmpv4Header::ECHO);
-  header.SetCode (0);
-  if (Node::ChecksumEnabled ())
-    {
-      header.EnableChecksum ();
-    }
-  p->AddHeader (header);
-  m_sent.insert (std::make_pair (m_seq - 1, Simulator::Now ()));
-  m_socket->SetIpTtl(m_ttl);
-  m_socket->Send (p, 0);
-  m_next = Simulator::Schedule (m_interval, &TraceRoute::Send, this);
-  delete[] data;
+    m_ttl = ttl;
+    if (m_socket != 0)
+	m_socket->SetIpTtl(ttl);
+    return ;
 }
-
-void 
+void
 TraceRoute::StartApplication (void)
 {
   NS_LOG_FUNCTION (this);
 
-  m_started = Simulator::Now ();
-  if (m_verbose)
+  if (m_socket == 0)
     {
-      std::cout << "TRACEROUTE  " << m_remote << "**.\n";
+      TypeId tid = TypeId::LookupByName ("ns3::UdpSocketFactory");
+      
+      m_socket = Socket::CreateSocket (GetNode (), tid);
+      
+      if (Ipv4Address::IsMatchingType(m_peerAddress) == true)
+        {
+          m_socket->Bind ();
+          m_socket->Connect (InetSocketAddress (Ipv4Address::ConvertFrom(m_peerAddress), m_peerPort));
+        }
+      else if (Ipv6Address::IsMatchingType(m_peerAddress) == true)
+        {
+          m_socket->Bind6 ();
+          m_socket->Connect (Inet6SocketAddress (Ipv6Address::ConvertFrom(m_peerAddress), m_peerPort));
+        }
     }
 
-  m_socket = Socket::CreateSocket (GetNode (), TypeId::LookupByName ("ns3::Ipv4RawSocketFactory"));
-  NS_ASSERT (m_socket != 0);
-  m_socket->SetAttribute ("Protocol", UintegerValue (1)); // icmp
-  m_socket->SetRecvCallback (MakeCallback (&TraceRoute::Receive, this));
-  InetSocketAddress src = InetSocketAddress (Ipv4Address::GetAny (), 0);
-  int status;
-  status = m_socket->Bind (src);
-  NS_ASSERT (status != -1);
-  InetSocketAddress dst = InetSocketAddress (m_remote, 0);
-  status = m_socket->Connect (dst);
-  NS_ASSERT (status != -1);
-
-  Send ();
+  m_socket->SetIpTtl(m_ttl);
+  m_socket->SetRecvCallback (MakeNullCallback<void, Ptr<Socket> > ());
+  m_udpsocket = m_socket->GetObject<UdpSocketImpl>();
+  if (m_udpsocket != 0)
+  m_udpsocket->SetIcmpCallback (MakeCallback(&TraceRoute::ReceivedIcmp, Ptr<TraceRoute> (this)));
+  m_sendEvent = Simulator::Schedule (Seconds (0.0), &TraceRoute::Send, this);
 }
-void 
+
+void
 TraceRoute::StopApplication (void)
 {
   NS_LOG_FUNCTION (this);
-  m_next.Cancel ();
-  m_socket->Close ();
-
-  if (m_verbose)
-    {
-      std::ostringstream os;
-      os.precision (4);
-      os << "--- " << m_remote << " traceroute statistics ---\n" 
-         << m_seq << " packets transmitted, " << m_recv << " received, "
-         << ((m_seq - m_recv) * 100 / m_seq) << "% packet loss, "
-         << "time " << (Simulator::Now () - m_started).GetMilliSeconds () << "ms\n";
-
-      if (m_avgRtt.Count () > 0)
-        os << "rtt min/avg/max/mdev = " << m_avgRtt.Min () << "/" << m_avgRtt.Avg () << "/"
-           << m_avgRtt.Max () << "/" << m_avgRtt.Stddev ()
-           << " ms\n";
-      std::cout << os.str ();
-    }
+  Simulator::Cancel (m_sendEvent);
 }
 
+void
+TraceRoute::Send (void)
+{
+  NS_LOG_FUNCTION (this);
+  NS_ASSERT (m_sendEvent.IsExpired ());
+  SeqTsHeader seqTs;
+  seqTs.SetSeq (m_sent);
+  Ptr<Packet> p = Create<Packet> (m_size-(8+4)); // 8+4 : the size of the seqTs header
+  p->AddHeader (seqTs);
 
-} // namespace ns3
+  std::stringstream peerAddressStringStream;
+  if (Ipv4Address::IsMatchingType (m_peerAddress))
+    {
+      peerAddressStringStream << Ipv4Address::ConvertFrom (m_peerAddress);
+    }
+  else if (Ipv6Address::IsMatchingType (m_peerAddress))
+    {
+      peerAddressStringStream << Ipv6Address::ConvertFrom (m_peerAddress);
+    }
+
+  if ((m_socket->Send (p)) >= 0)
+    {
+      ++m_sent;
+
+      NS_LOG_INFO ( GetNode()->GetId() << " TraceDelay TX " << m_size << " bytes to "
+                                    << peerAddressStringStream.str () << " Uid: "
+                                    << p->GetUid () << " Time: "
+                                    << (Simulator::Now ()).GetSeconds ());
+
+    }
+  else
+    {
+      NS_LOG_INFO ("Error while sending " << m_size << " bytes to "
+                                          << peerAddressStringStream.str ());
+    }
+/*
+We send again when ICMP callback comes
+  if (m_sent < m_count)
+    {
+      m_sendEvent = Simulator::Schedule (m_interval, &TraceRoute::Send, this);
+    }
+*/
+}
+
+} // Namespace ns3
