@@ -64,7 +64,8 @@ public:
    * \return the number of received packets
    */
   uint32_t GetReceived (void) const;
-
+  Ptr<Socket> GetSocket (void) ;
+  void SetIpTtl(uint16_t);
   /**
    * \brief Returns the size of the window used for checking loss.
    * \return the size of the window used for checking loss.
@@ -96,6 +97,7 @@ private:
   void HandleRead (Ptr<Socket> socket);
 
   uint16_t m_port; //!< Port on which we listen for incoming packets.
+  uint16_t m_ttl; //!< Port on which we listen for incoming packets.
   Ptr<Socket> m_socket; //!< IPv4 Socket
   Ptr<Socket> m_socket6; //!< IPv6 Socket
   uint32_t m_received; //!< Number of received packets

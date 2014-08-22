@@ -53,6 +53,9 @@ class Topology {
   void OtterOutput(char* f);
   bool IsConnected();
   void Classify();
+  void AdjustWeights(int);
+  void AdjustEdgeWtIgraph(int);
+  void AdjustNodeWtIgraph();
 
  private:
 

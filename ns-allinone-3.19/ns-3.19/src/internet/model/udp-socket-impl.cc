@@ -66,7 +66,7 @@ UdpSocketImpl::GetTypeId (void)
                    MakeCallbackChecker ())
     .AddAttribute ("IcmpCallback6", "Callback invoked whenever an icmpv6 error is received on this socket.",
                    CallbackValue (),
-                   MakeCallbackAccessor (&UdpSocketImpl::m_icmpCallback6),
+                   MakeCallbackAccessor (&UdpSocketImpl::m_icmp6Callback),
                    MakeCallbackChecker ())
   ;
   return tid;
@@ -131,6 +131,12 @@ UdpSocketImpl::~UdpSocketImpl ()
   m_udp = 0;
 }
 
+Ptr<Socket>
+UdpSocketImpl::CreateSocket(void)
+{
+    return m_udp->CreateSocket ();
+}
+
 void 
 UdpSocketImpl::SetNode (Ptr<Node> node)
 {
@@ -144,7 +150,29 @@ UdpSocketImpl::SetUdp (Ptr<UdpL4Protocol> udp)
   NS_LOG_FUNCTION_NOARGS ();
   m_udp = udp;
 }
+void 
+UdpSocketImpl::SetIcmpCallback (Callback<void,Ipv4Address,uint8_t,uint8_t,uint8_t,uint32_t> callback)
+{
+  NS_LOG_FUNCTION (this << &callback);
+  m_icmpCallback = callback;
+}
+void 
+UdpSocketImpl::SetIcmp6Callback (Callback<void,Ipv6Address,uint8_t,uint8_t,uint8_t,uint32_t> callback)
+{
+  NS_LOG_FUNCTION (this << &callback);
+  m_icmp6Callback = callback;
+}
 
+
+
+Ptr<UdpL4Protocol> 
+UdpSocketImpl::GetUdp ()
+{
+
+  NS_LOG_FUNCTION_NOARGS ();
+  return m_udp;
+
+}
 
 enum Socket::SocketErrno
 UdpSocketImpl::GetErrno (void) const
@@ -482,6 +510,8 @@ UdpSocketImpl::DoSendTo (Ptr<Packet> p, Ipv4Address dest, uint16_t port)
     }
 
   Ptr<Ipv4> ipv4 = m_node->GetObject<Ipv4> ();
+  NS_ASSERT (ipv4 != NULL);
+
 
   // Locally override the IP TTL for this socket
   // We cannot directly modify the TTL at this stage, so we set a Packet tag
@@ -677,6 +707,7 @@ UdpSocketImpl::DoSendTo (Ptr<Packet> p, Ipv6Address dest, uint16_t port)
     }
 
   Ptr<Ipv6> ipv6 = m_node->GetObject<Ipv6> ();
+  NS_ASSERT (ipv6 != NULL);
 
   // Locally override the IP TTL for this socket
   // We cannot directly modify the TTL at this stage, so we set a Packet tag
@@ -1041,9 +1072,9 @@ UdpSocketImpl::ForwardIcmp6 (Ipv6Address icmpSource, uint8_t icmpTtl,
 {
   NS_LOG_FUNCTION (this << icmpSource << (uint32_t)icmpTtl << (uint32_t)icmpType <<
                    (uint32_t)icmpCode << icmpInfo);
-  if (!m_icmpCallback6.IsNull ())
+  if (!m_icmp6Callback.IsNull ())
     {
-      m_icmpCallback6 (icmpSource, icmpTtl, icmpType, icmpCode, icmpInfo);
+      m_icmp6Callback (icmpSource, icmpTtl, icmpType, icmpCode, icmpInfo);
     }
 }
 

@@ -68,6 +68,7 @@ void Graph::AddEdge(Edge *edge) {
   assert(edge != NULL);
   edges.insert(edges.end(), edge);
   numEdges++;
+  edge->GetSrc()->AddOutEdge(edge);
 
 }
 

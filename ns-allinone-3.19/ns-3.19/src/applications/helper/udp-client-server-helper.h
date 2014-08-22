@@ -145,9 +145,11 @@ public:
      * \returns the applications created, one application per input node.
      */
   ApplicationContainer Install (NodeContainer c);
+  Ptr<UdpClient> GetClient (void);
 
 private:
   ObjectFactory m_factory; //!< Object factory.
+  Ptr<UdpClient> m_client; //!< The last created server application
 };
 /**
  * \ingroup udpclientserver

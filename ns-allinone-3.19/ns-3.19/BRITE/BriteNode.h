@@ -35,7 +35,7 @@
 #include "Util.h"
 #include "Graph.h"
 #include "Topology.h"
-
+#include "Edge.h"
 namespace brite {
 
 class Topology;
@@ -53,6 +53,7 @@ class BriteNode {
   int GetAddr() { return nodeAddr; }
   int GetInDegree() { return inDegree; }
   int GetOutDegree() { return outDegree; }
+  double GetWeight() { return igraphWt; } //Shweta
   Color GetColor() { return nodeColor; }
   NodeConf* GetNodeInfo() { return nodeInfo; }
   
@@ -60,8 +61,12 @@ class BriteNode {
   void SetAddr(int addr) { nodeAddr = addr; }
   void SetInDegree(int degree) { inDegree = degree; }
   void SetOutDegree(int degree) { outDegree = degree; }
+  void SetWeight(int wt) { igraphWt = wt; } //Shweta
   void SetColor(Color col) { nodeColor = col; }
   void SetNodeInfo(NodeConf*  info) { nodeInfo = info; }
+  std::list<Edge*> GetOutEdges();
+  void AddOutEdge(Edge*);
+
 
  private:
 
@@ -69,8 +74,10 @@ class BriteNode {
   int nodeAddr;
   int inDegree;
   int outDegree;
+  double igraphWt; //Shweta
   Color nodeColor;
   NodeConf* nodeInfo;
+  std::list<Edge*> outEdgeList;
 
 };
 

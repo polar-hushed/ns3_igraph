@@ -312,6 +312,68 @@ void Topology::OtterOutput(char* filename) {
 }
 
 
+void 
+Topology::AdjustWeights(int type)
+{
+   AdjustNodeWtIgraph();
+   AdjustEdgeWtIgraph(type);
+}
+
+void Topology::AdjustNodeWtIgraph() {
+  /* Populate Incidence list */
+  list<Edge*>::iterator el;
+  cout << "Igraph: Adjusting Node weights" << endl;
+   
+  /* Look for Links */
+  for (el = g->edges.begin(); el != g->edges.end(); el++) {
+    BriteNode* Src = (*el)->GetSrc();
+    BriteNode* Dst = (*el)->GetDst();
+    assert(Src != NULL && Dst != NULL);
+    
+    int max = Src->GetOutDegree() > Dst->GetOutDegree()? Src->GetOutDegree():Dst->GetOutDegree();
+    double old = Src->GetWeight();
+    Src->SetWeight(max/((float)Src->GetOutDegree())+Src->GetWeight());
+
+    old = Dst->GetWeight();
+    Dst->SetWeight(max/((float)Dst->GetOutDegree())+Dst->GetWeight());
+   }
+
+  for (int i = 0; i < g->GetNumNodes(); i++) 
+  {
+    BriteNode* n = g->GetNodePtr(i);
+    cout << "Igraph: Node=" << n->GetId() << " measure=" << n->GetOutDegree() <<  " degree=" << n->GetWeight() << endl;
+  }
+}
+
+
+void Topology::AdjustEdgeWtIgraph(int type) {
+	/* Populate Incidence list */
+	list<Edge*>::iterator el;
+	cout << "Igraph: Adjusting Edge weights" << endl;
+
+	/* Look for Links */
+	for (el = g->edges.begin(); el != g->edges.end(); el++) {
+		BriteNode* Src = (*el)->GetSrc();
+		BriteNode* Dst = (*el)->GetDst();
+		assert(Src != NULL && Dst != NULL);
+
+		float max;
+		switch(type)
+		{
+			case 1: //adjust wt by Weighted Degree 
+				max = Src->GetWeight() > Dst->GetWeight()? Src->GetWeight():Dst->GetWeight();
+				cout << "Igraph: Old Link=" << Src->GetId() << "--" << Dst->GetId() << " Old weights=" << Src->GetWeight() << "--" << Dst->GetWeight() ;
+				cout << " Old BW=" << (*el)->GetConf()->GetBW() ;
+
+				(*el)->GetConf()->SetBW(max*((*el)->GetConf()->GetBW()));
+				cout << " New BW=" << (*el)->GetConf()->GetBW() << endl;
+				break;
+			case 2: //adjust wt by the src out degree
+				(*el)->GetConf()->SetBW(Src->GetOutDegree()*(*el)->GetConf()->GetBW());
+				break; 
+		}
+	}
+}
 void Topology::Classify() {
 
   /* Populate Incidence list */
@@ -469,6 +531,5 @@ void Topology::Classify() {
       }
     }
   }
-}
-
+ }
 } // namespace brite

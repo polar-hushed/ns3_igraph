@@ -35,6 +35,8 @@ namespace ns3 {
 
 class Ipv4EndPoint;
 class Ipv6EndPoint;
+class Ipv6Header;
+class Ipv6Interface;
 class Node;
 class Packet;
 class UdpL4Protocol;
@@ -71,6 +73,8 @@ public:
    * \param udp the UDP L4 protocol
    */
   void SetUdp (Ptr<UdpL4Protocol> udp);
+  Ptr<UdpL4Protocol> GetUdp ();
+  Ptr<Socket> CreateSocket(void);
 
   virtual enum SocketErrno GetErrno (void) const;
   virtual enum SocketType GetSocketType (void) const;
@@ -96,6 +100,8 @@ public:
   virtual void BindToNetDevice (Ptr<NetDevice> netdevice);
   virtual bool SetAllowBroadcast (bool allowBroadcast);
   virtual bool GetAllowBroadcast () const;
+  void SetIcmpCallback (Callback<void,Ipv4Address,uint8_t,uint8_t,uint8_t,uint32_t> );
+  void SetIcmp6Callback (Callback<void,Ipv6Address,uint8_t,uint8_t,uint8_t,uint32_t> );
 
 private:
   // Attributes set through UdpSocket base class 
@@ -214,7 +220,7 @@ private:
   Ptr<Node>           m_node;       //!< the associated node
   Ptr<UdpL4Protocol> m_udp;         //!< the associated UDP L4 protocol
   Callback<void, Ipv4Address,uint8_t,uint8_t,uint8_t,uint32_t> m_icmpCallback;  //!< ICMP callback
-  Callback<void, Ipv6Address,uint8_t,uint8_t,uint8_t,uint32_t> m_icmpCallback6; //!< ICMPv6 callback
+  Callback<void, Ipv6Address,uint8_t,uint8_t,uint8_t,uint32_t> m_icmp6Callback; //!< ICMPv6 callback
 
   Address m_defaultAddress; //!< Default address
   uint16_t m_defaultPort;   //!< Default port

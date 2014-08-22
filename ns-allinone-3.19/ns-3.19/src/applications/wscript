@@ -10,6 +10,7 @@ def build(bld):
         'model/radvd.cc',
         'model/radvd-interface.cc',
         'model/radvd-prefix.cc',
+        'model/trace-route.cc',
         'model/udp-client.cc',
         'model/udp-server.cc',
         'model/seq-ts-header.cc',
@@ -25,6 +26,7 @@ def build(bld):
         'helper/ping6-helper.cc',
         'helper/udp-client-server-helper.cc',
         'helper/udp-echo-helper.cc',
+        'helper/trace-route-helper.cc',
         'helper/v4ping-helper.cc',
         'helper/radvd-helper.cc',
         ]
@@ -44,6 +46,7 @@ def build(bld):
         'model/radvd.h',
         'model/radvd-interface.h',
         'model/radvd-prefix.h',
+        'model/trace-route.h',
         'model/udp-client.h',
         'model/udp-server.h',
         'model/seq-ts-header.h',
@@ -59,6 +62,7 @@ def build(bld):
         'helper/ping6-helper.h',
         'helper/udp-client-server-helper.h',
         'helper/udp-echo-helper.h',
+        'helper/trace-route-helper.h',
         'helper/v4ping-helper.h',
         'helper/radvd-helper.h',
         ]

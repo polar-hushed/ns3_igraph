@@ -110,6 +110,21 @@ UdpServer::DoDispose (void)
   Application::DoDispose ();
 }
 
+Ptr<Socket> 
+UdpServer::GetSocket (void)
+{
+    return m_socket;
+
+}
+void 
+UdpServer::SetIpTtl(uint16_t ttl)
+{
+    m_ttl = ttl;
+    if (m_socket != 0)
+	m_socket->SetIpTtl(ttl);
+    return ;
+}
+
 void
 UdpServer::StartApplication (void)
 {
@@ -124,6 +139,7 @@ UdpServer::StartApplication (void)
       m_socket->Bind (local);
     }
 
+  m_socket->SetIpTtl(m_ttl);
   m_socket->SetRecvCallback (MakeCallback (&UdpServer::HandleRead, this));
 
   if (m_socket6 == 0)

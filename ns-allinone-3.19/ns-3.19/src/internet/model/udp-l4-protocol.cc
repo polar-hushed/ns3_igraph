@@ -61,6 +61,7 @@ UdpL4Protocol::GetTypeId (void)
                    MakeObjectVectorAccessor (&UdpL4Protocol::m_sockets),
                    MakeObjectVectorChecker<UdpSocketImpl> ())
   ;
+  
   return tid;
 }
 

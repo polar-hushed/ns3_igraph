@@ -20,6 +20,7 @@
 #include "ns3/net-device.h"
 #include "ns3/net-device-container.h"
 #include "ns3/point-to-point-helper.h"
+#include "ns3/point-to-point-net-device.h"
 #include "ns3/ipv4-address-helper.h"
 #include "ns3/random-variable-stream.h"
 #include "ns3/data-rate.h"
@@ -63,7 +64,8 @@ BriteTopologyHelper::BriteTopologyHelper (std::string confFile,
     m_numAs (0),
     m_topology (NULL),
     m_numNodes (0),
-    m_numEdges (0)
+    m_numEdges (0),
+    m_el (NULL)
 {
   NS_LOG_FUNCTION (this);
 
@@ -78,7 +80,8 @@ BriteTopologyHelper::BriteTopologyHelper (std::string confFile,
     m_numAs (0),
     m_topology (NULL),
     m_numNodes (0),
-    m_numEdges (0)
+    m_numEdges (0),
+    m_el (NULL)
 {
   NS_LOG_FUNCTION (this);
 
@@ -90,7 +93,8 @@ BriteTopologyHelper::BriteTopologyHelper (std::string confFile)
     m_numAs (0),
     m_topology (NULL),
     m_numNodes (0),
-    m_numEdges (0)
+    m_numEdges (0),
+    m_el (NULL)
 {
   NS_LOG_FUNCTION (this);
 
@@ -313,6 +317,25 @@ BriteTopologyHelper::GetNodeForAs (uint32_t asNum, uint32_t nodeNum)
   return m_nodesByAs[asNum]->Get (nodeNum);
 }
 
+Ptr<Node>
+BriteTopologyHelper::GetNode ( uint32_t nodeNum)
+{
+  return m_nodes.Get(nodeNum);
+}
+brite::BriteNode*
+BriteTopologyHelper::GetBriteNode (uint32_t nodeNum)
+{
+  brite::Graph *g = m_topology->GetGraph ();
+  return g->GetNodePtr(nodeNum);
+}
+
+std::list<brite::Edge*>
+BriteTopologyHelper::GetBriteEdgeList ()
+{
+   brite::Graph *g = m_topology->GetGraph ();
+   return g->GetEdges ();
+} 
+
 uint32_t
 BriteTopologyHelper::GetNNodesForAs (uint32_t asNum)
 {
@@ -466,6 +489,28 @@ BriteTopologyHelper::BuildBriteTopology (InternetStackHelper& stack, const uint3
   stack.Install (m_nodes);
 
   ConstructTopology ();
+}
+void
+BriteTopologyHelper::AdjustWeights (int type)
+{
+
+    brite::Graph *g = m_topology->GetGraph ();
+    assert(m_topology != NULL);
+    NS_LOG_INFO("Igraph: Adjusting weights  for the topology");
+    m_topology->AdjustWeights(type);
+
+    for (int i = 0; i < g->GetNumNodes(); ++i)
+    {
+      // The brite value for data rate is given in ibps
+      brite::BriteNode *bn =  g->GetNodePtr(i);
+      Ptr<Node> n = m_nodes.Get(bn->GetId());
+      for (unsigned int i = 0; i < n->GetNDevices(); ++i)
+      {
+	Ptr<PointToPointNetDevice> p =StaticCast<PointToPointNetDevice> (n->GetDevice(i));
+	p->SetDataRate(DataRate (bn->GetOutDegree()* mbpsToBps));
+      }
+    }
+
 }
 
 void

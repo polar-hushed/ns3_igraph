@@ -256,6 +256,7 @@ def build(bld):
         'model/ipv4-route.h',
         'model/ipv4-routing-protocol.h',
         'model/udp-socket.h',
+        'model/udp-socket-impl.h',
         'model/udp-socket-factory.h',
         'model/tcp-socket.h',
         'model/tcp-socket-factory.h',

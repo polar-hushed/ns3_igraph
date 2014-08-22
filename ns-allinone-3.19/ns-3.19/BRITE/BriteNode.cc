@@ -41,6 +41,7 @@ BriteNode::BriteNode(int i) {
   inDegree = 0;
   outDegree = 0;
   nodeColor = BLACK;
+  igraphWt = outDegree; //Shweta
 
 }
 
@@ -80,4 +81,16 @@ void ASNodeConf::SetTopology(Topology* top, int asid) {
   } 
 }
 
+std::list<Edge*>
+BriteNode::GetOutEdges()
+{
+	return outEdgeList;
+}
+
+void 
+BriteNode::AddOutEdge(Edge* e)
+{
+    outEdgeList.push_back(e); 
+
+}
 } // namespace brite

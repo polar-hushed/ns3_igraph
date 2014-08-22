@@ -37,11 +37,11 @@ int
 main (int argc, char *argv[])
 {
 
-  double SimTime        = 1000.00;
+  double SimTime        = 10.00;
   double SinkStartTime  = 1.0001;
-  double SinkStopTime   = 999.90001;
-  double AppStartTime   = 10.0001;
-  double AppStopTime    = 999.80001;
+  double SinkStopTime   = 9.90001;
+  double AppStartTime   = 1.0001;
+  double AppStopTime    = 9.80001;
 
   std::string AppPacketRate ("10Kbps");
   Config::SetDefault  ("ns3::OnOffApplication::PacketSize",StringValue ("1000"));
